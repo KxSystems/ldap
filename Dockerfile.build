@@ -1,0 +1,16 @@
+FROM centos:7
+
+RUN yum -y install gcc && \
+    yum -y install cmake && \
+    yum -y install make && \
+    yum -y install vim && \
+    yum -y install openssl-devel.x86_64 && \
+    yum -y install wget
+
+RUN yum clean all
+
+RUN mkdir -p /source/api/ /source/code/ && cd /source/api && wget https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.4.50.tgz && tar xvf openldap-2.4.50.tgz --strip-components=1
+RUN cd /source/api/ && ./configure --disable-slapd --with-tls=openssl && make && make install
+WORKDIR /source/code/
+
+CMD ["/bin/bash"]
