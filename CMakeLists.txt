@@ -14,11 +14,11 @@ message(STATUS "Build Tool : ${CMAKE_BUILD_TOOL}")
 message(STATUS "Solace API : $ENV{LDAP_API_DIR}")
 
 find_library(OPENLDAP_LIBRARY
-    NAMES libldap
+    NAMES ldap
 )
 
 find_library(LBER_LIBRARY
-    NAMES liblber
+    NAMES lber
 )
 
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
