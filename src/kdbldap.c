@@ -1,16 +1,32 @@
+
 #include <ldap.h>
 #include "kdbldap.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #define CHECK_PARAM_TYPE(x,y,z) {if (x->t != y) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 
 static LDAP* LDAP_SESSION = NULL;
 
-K kdbldap_init(K todo)
+K kdbldap_init(K uris)
 {
-    /* TODO parse URIs from list */
-    char* URI = "ldap://127.0.0.1:389";
-    return ki(ldap_initialize( &LDAP_SESSION, URI));
+    CHECK_PARAM_TYPE(uris,KS,"init");
+    char* csvUris = NULL;
+    int x,currentLen = 0;
+    for (x=0;x<uris->n;x++)
+    {
+        char* uri = kS(uris)[x];
+        int uriLen = strlen(uri);
+        csvUris = realloc(csvUris,currentLen+uriLen+1);
+        memcpy(csvUris+currentLen,uri,uriLen);
+        currentLen += uriLen;
+        if (x==uris->n-1)
+            csvUris[currentLen]='\0';
+        else
+            csvUris[currentLen]=',';
+        ++currentLen;
+    }
+    return ki(ldap_initialize( &LDAP_SESSION, csvUris));
 }
 
 K kdbldap_set_option(K global, K option,K value)
