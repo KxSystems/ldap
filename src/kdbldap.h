@@ -15,7 +15,7 @@ extern "C" {
 
 /* TODO */
 EXP K kdbldap_init(K todo);
-EXP K kdbldap_set_option(K option,K value);
+EXP K kdbldap_set_option(K global,K option,K value);
 
 #ifdef __cplusplus
 }
