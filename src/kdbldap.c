@@ -79,3 +79,47 @@ K kdbldap_set_option(K global, K option,K value)
     /* TLS SUPPORTED OPTIONS - TODO */
     return krr("Unsupported option");
 }
+
+K kdbldap_get_option(K global,K option)
+{
+    CHECK_PARAM_TYPE(global,-KB,"set_option");
+    CHECK_PARAM_TYPE(option,-KS,"set_option");
+    LDAP* ld = (global->g)?NULL:LDAP_SESSION;
+    
+    if (strcmp(option->s,"LDAP_OPT_API_INFO")==0)
+    {
+        LDAPAPIInfo info;
+        info.ldapai_info_version = LDAP_API_INFO_VERSION;
+        int res = ldap_get_option(ld, LDAP_OPT_API_INFO, &info);
+        if (res != LDAP_OPT_SUCCESS)
+            return krr("Problem retrieving option");
+
+        K ext = ktn(KS,0);
+        if (info.ldapai_extensions != NULL)
+        {
+           int i=0;
+           for(i=0; info.ldapai_extensions[i] != NULL; i++);
+           r0(ext);
+           ext = ktn(KS,i);
+           for(i=0; info.ldapai_extensions[i] != NULL; i++)
+           {
+                kS(ext)[0]=ss(info.ldapai_extensions[i]);
+                ldap_memfree(info.ldapai_extensions[i]);
+           }
+           ldap_memfree(info.ldapai_extensions);
+        }
+
+        K keys = ktn(KS,5);
+        kS(keys)[0]=ss((char*)"apiVersion");
+        kS(keys)[1]=ss((char*)"protocolVersion");
+        kS(keys)[2]=ss((char*)"vendorVersion");
+        kS(keys)[3]=ss((char*)"vendorName");
+        kS(keys)[4]=ss((char*)"ext");
+        K vals = knk(5,ki(info.ldapai_api_version),ki(info.ldapai_protocol_version),ki(info.ldapai_vendor_version),ks(info.ldapai_vendor_name),ext);
+
+        ldap_memfree(info.ldapai_vendor_name);
+        return xD(keys,vals);
+    }
+    /* TODO add other possible options */
+    return krr("Unsupported option");
+}
