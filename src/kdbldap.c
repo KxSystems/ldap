@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #define CHECK_PARAM_TYPE(x,y,z) {if (x->t != y) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
+#define CHECK_PARAM_STRING_TYPE(x,z) {if (x->t != -KS && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_INT_TYPE(x,z) {if (x->t != -KI && x->t != -KJ) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 
 static LDAP* LDAP_SESSION = NULL;
@@ -14,6 +15,28 @@ static int getInt(K val)
     if (val->t==-KI)
         return val->i;
     return (int)val->j;
+}
+
+static char* createString(K in)
+{
+    char* newStr = NULL;
+    int len = 1;
+    if (in->t == KC)
+    {
+        len = (in->n) + 1;
+        newStr = (char*)malloc(len);
+        memcpy(newStr,in->G0,len-1);
+    }
+    else if (in->t == -KS)
+    {
+        len = strlen(in->s)+1;
+        newStr = (char*)malloc(len);
+        memcpy(newStr,in->s,len-1);
+    }
+    else
+        newStr = (char*)malloc(len);
+    newStr[len-1]='\0';
+    return newStr;
 }
 
 K kdbldap_init(K uris)
@@ -122,4 +145,18 @@ K kdbldap_get_option(K global,K option)
     }
     /* TODO add other possible options */
     return krr("Unsupported option");
+}
+
+K kdbldap_bind(K dn, K cred)
+{
+    CHECK_PARAM_STRING_TYPE(dn,"bind");
+    CHECK_PARAM_STRING_TYPE(cred,"cred");
+    char* dnStr = createString(dn);
+    char* credStr = createString(cred);
+    struct berval pass = { 0, NULL };
+    ber_str2bv(credStr,0,0,&pass);
+    /* TODO other bind params */
+    int res = ldap_sasl_bind_s( LDAP_SESSION,dnStr,LDAP_SASL_SIMPLE,&pass,NULL,NULL,NULL);
+    free(dnStr);
+    return ki(res);
 }
