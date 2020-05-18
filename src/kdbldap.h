@@ -25,6 +25,9 @@ EXP K kdbldap_init(K uris);
 /* TODO */
 EXP K kdbldap_set_option(K global,K option,K value);
 
+/* TODO */
+EXP K kdbldap_get_option(K global,K option);
+
 #ifdef __cplusplus
 }
 #endif
