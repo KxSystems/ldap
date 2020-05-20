@@ -103,12 +103,20 @@ K kdbldap_set_option(K global, K option,K value)
     return krr("Unsupported option");
 }
 
+static K getIntOption(LDAP* ld, int option)
+{
+    int res=0;
+    ldap_get_option(ld, option, &res);
+    return ki(res);
+} 
+
 K kdbldap_get_option(K global,K option)
 {
     CHECK_PARAM_TYPE(global,-KB,"set_option");
     CHECK_PARAM_TYPE(option,-KS,"set_option");
     LDAP* ld = (global->g)?NULL:LDAP_SESSION;
     
+    /* LDAP SUPPORTED OPTIONS */
     if (strcmp(option->s,"LDAP_OPT_API_INFO")==0)
     {
         LDAPAPIInfo info;
@@ -143,7 +151,32 @@ K kdbldap_get_option(K global,K option)
         ldap_memfree(info.ldapai_vendor_name);
         return xD(keys,vals);
     }
-    /* TODO add other possible options */
+    if (strcmp(option->s,"LDAP_OPT_CONNECT_ASYNC")==0)
+        return getIntOption(ld,LDAP_OPT_CONNECT_ASYNC);
+    if (strcmp(option->s,"LDAP_OPT_DEBUG_LEVEL")==0)
+        return getIntOption(ld,LDAP_OPT_DEBUG_LEVEL);
+    if (strcmp(option->s,"LDAP_OPT_DEREF")==0)
+        return getIntOption(ld,LDAP_OPT_DEREF);
+    if (strcmp(option->s,"LDAP_OPT_PROTOCOL_VERSION")==0)
+        return getIntOption(ld,LDAP_OPT_PROTOCOL_VERSION);
+    if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
+        return getIntOption(ld,LDAP_OPT_REFERRALS);
+    if (strcmp(option->s,"LDAP_OPT_RESULT_CODE")==0)
+        return getIntOption(ld,LDAP_OPT_RESULT_CODE);
+    if (strcmp(option->s,"LDAP_OPT_SIZELIMIT")==0)
+        return getIntOption(ld,LDAP_OPT_SIZELIMIT);
+    if (strcmp(option->s,"LDAP_OPT_TIMELIMIT")==0)
+        return getIntOption(ld,LDAP_OPT_TIMELIMIT);
+    /* TODO other ldap options */
+    /* SASL SUPPORTED OPTIONS - TODO */
+    /* TCP SUPPORTED OPTIONS */
+    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_IDLE")==0)
+        return getIntOption(ld,LDAP_OPT_X_KEEPALIVE_IDLE);
+    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_PROBES")==0)
+        return getIntOption(ld,LDAP_OPT_X_KEEPALIVE_PROBES);
+    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_INTERVAL")==0)
+        return getIntOption(ld,LDAP_OPT_X_KEEPALIVE_INTERVAL);
+    /* TLS SUPPORTED OPTIONS - TODO */
     return krr("Unsupported option");
 }
 
