@@ -41,7 +41,41 @@ Returns 0 if successful.
 
 ### .ldap.setOption
 
-TODO 
+Sets options globally or per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
+
+Syntax: .ldap.setOption[global;option;value]
+
+Where
+
+- global is a boolean on whether to set the value globally (true) or for the session (false)
+- option is a symbol for the option you wish to set. 
+- value is the value relating to the option. The data type depends on the option selected (see below)
+
+Supported LDAP options
+
+- LDAP_OPT_CONNECT_ASYNC (value data type int/long)
+- LDAP_OPT_DEBUG_LEVEL (value data type int/long)
+- LDAP_OPT_DEREF (value data type int/long)
+- LDAP_OPT_PROTOCOL_VERSION (value data type int/long)
+- LDAP_OPT_REFERRALS (value data type int/long)
+- LDAP_OPT_RESULT_CODE (value data type int/long)
+- LDAP_OPT_SIZELIMIT (value data type int/long)
+- LDAP_OPT_TIMELIMIT (value data type int/long)
+- TODO further options
+
+Supported SASL options
+
+- TODO
+
+Supported TCP options
+
+- LDAP_OPT_X_KEEPALIVE_IDLE (value data type int/long)
+- LDAP_OPT_X_KEEPALIVE_PROBES (value data type int/long)
+- LDAP_OPT_X_KEEPALIVE_INTERVAL (value data type int/long)
+
+Supported TLS options
+
+- TODO
 
 ### .ldap.getOption
 
