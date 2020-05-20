@@ -43,12 +43,12 @@ Returns 0 if successful.
 
 Sets options globally or per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
-Syntax: .ldap.setOption[global;option;value]
+Syntax: `.ldap.setOption[global;option;value]`
 
 Where
 
 - global is a boolean on whether to set the value globally (true) or for the session (false)
-- option is a symbol for the option you wish to set. 
+- option is a symbol for the option you wish to set. See supported options below.
 - value is the value relating to the option. The data type depends on the option selected (see below)
 
 Supported LDAP options
@@ -79,7 +79,20 @@ Supported TLS options
 
 ### .ldap.getOption
 
-TODO
+Gets options globally or per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
+
+Syntax: `.ldap.getOption[global;option]`
+
+Where
+
+- global is a boolean on whether to set the value globally (true) or for the session (false)
+- option is a symbol for the option you wish to get. See supported options below
+
+Value returned from function depends on options used. Supported LDAP options
+
+- LDAP_OPT_API_INFO returns dict containing API version info
+
+TODO further options
 
 ### .ldap.bind
 
