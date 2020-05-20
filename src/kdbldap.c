@@ -158,5 +158,84 @@ K kdbldap_bind(K dn, K cred)
     /* TODO other bind params */
     int res = ldap_sasl_bind_s( LDAP_SESSION,dnStr,LDAP_SASL_SIMPLE,&pass,NULL,NULL,NULL);
     free(dnStr);
+    free(credStr);
     return ki(res);
+}
+
+K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly)
+{
+    CHECK_PARAM_STRING_TYPE(baseDn,"search");
+    CHECK_PARAM_INT_TYPE(scope,"search");
+    CHECK_PARAM_STRING_TYPE(filter,"search");
+    CHECK_PARAM_INT_TYPE(attrsOnly,"search");
+    char* baseStr = createString(baseDn);
+    char* filterStr = createString(filter);
+    int scopeInt = getInt(scope);
+    int attrsOnlyInt = getInt(attrsOnly);
+    LDAPMessage* msg = NULL;
+    int res = ldap_search_ext_s(
+              LDAP_SESSION,
+              baseStr,
+              scopeInt,  /* e.g. LDAP_SCOPE_SUBTREE */
+              filterStr,
+              NULL, /* char* attrs[] */
+              attrsOnlyInt, /* 0 = attribute values and descriptions, otherwise just descriptions */
+              NULL, /* LDAPControl **serverctrls */
+              NULL, /* LDAPControl **clientctrls */
+              NULL, /* struct timeval *timeout */
+              LDAP_NO_LIMIT,  /* int sizelimit e.g. LDAP_NO_LIMIT */
+              &msg);
+    free(filterStr);
+    free(baseStr);
+    switch (res)
+    {
+        case LDAP_SIZELIMIT_EXCEEDED:
+        case LDAP_TIMELIMIT_EXCEEDED:
+        case LDAP_SUCCESS:
+        {
+            K Kentries = knk(0);
+            LDAPMessage* entry = NULL;
+            for (entry=ldap_first_entry(LDAP_SESSION,msg);entry!=NULL;entry=ldap_next_entry(LDAP_SESSION,entry))
+            {
+                K Kentry = knk(0);
+                char* entryDn = ldap_get_dn(LDAP_SESSION,entry);
+                if (entryDn)
+                {
+                    jk(&Kentry,kp(entryDn));
+                    ldap_memfree(entryDn);
+                }
+                else
+                    jk(&Kentry,kp((char*)""));
+                BerElement* pBer = NULL;
+                char* attribute = NULL;
+                K Kattrs = knk(0);
+                for (attribute=ldap_first_attribute(LDAP_SESSION,entry,&pBer);attribute!=NULL;attribute=ldap_next_attribute(LDAP_SESSION,entry,pBer))
+                {
+                    K kAttrVals = knk(0);
+                    struct berval** vals = ldap_get_values_len(LDAP_SESSION,entry,attribute);
+                    if (vals!=NULL)
+                    {
+                        int valCount = ldap_count_values_len(vals);
+                        int valPos;
+                        for (valPos=0;valPos<valCount;valPos++)
+                            jk(&kAttrVals,kpn((char*)vals[valPos]->bv_val,vals[valPos]->bv_len));
+                        ldap_value_free_len(vals);
+                    }
+                    K Kattribute = knk(2,ks(attribute),kAttrVals);
+                    jk(&Kattrs,Kattribute);
+                    ldap_memfree(attribute);
+                }
+                jk(&Kentry,Kattrs);
+                jk(&Kentries,Kentry);
+            }
+            ldap_msgfree(msg);
+            /* TODO indication of result code in return value incase of truncation */
+            return Kentries;
+        }
+        default:
+        {
+            ldap_msgfree(msg);
+            return ki(res);
+        }
+    }
 }

@@ -31,6 +31,9 @@ EXP K kdbldap_get_option(K global,K option);
 /* TODO */
 EXP K kdbldap_bind(K dn, K cred);
 
+/* TODO */
+EXP K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly);
+
 #ifdef __cplusplus
 }
 #endif
