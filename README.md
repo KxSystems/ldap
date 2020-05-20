@@ -90,9 +90,29 @@ Where
 
 Value returned from function depends on options used. Supported LDAP options
 
-- LDAP_OPT_API_INFO returns dict containing API version info
+- LDAP_OPT_API_INFO (returns dict containing API version info)
+- LDAP_OPT_CONNECT_ASYNC (returns int)
+- LDAP_OPT_DEBUG_LEVEL (returns int)
+- LDAP_OPT_DEREF (returns int)
+- LDAP_OPT_PROTOCOL_VERSION (returns int)
+- LDAP_OPT_REFERRALS (returns int)
+- LDAP_OPT_RESULT_CODE (returns int)
+- LDAP_OPT_SIZELIMIT (returns int)
+- LDAP_OPT_TIMELIMIT (returns int)
 
-TODO further options
+Supported SASL options
+
+- TODO
+
+Supported TCP options
+
+- LDAP_OPT_X_KEEPALIVE_IDLE (returns int)
+- LDAP_OPT_X_KEEPALIVE_PROBES (returns int)
+- LDAP_OPT_X_KEEPALIVE_INTERVAL (returns int)
+
+Supported TLS options
+
+- TODO
 
 ### .ldap.bind
 
