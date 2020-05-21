@@ -129,3 +129,8 @@ TODO
 
 TODO
 
+### .ldap.unbind
+
+Unbind from the directory, terminate the current association, and free resources.
+
+Syntax: `.ldap.unbind[unused]`
