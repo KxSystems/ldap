@@ -7,3 +7,4 @@
 .ldap.bind[`$"";`$""]
 .ldap.search[`$"";0;`$"(objectClass=*)";0]
 .ldap.search[`$"ou=people,dc=planetexpress,dc=com";2;`$"(objectClass=*)";0]
+.ldap.unbind[0]

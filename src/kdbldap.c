@@ -342,3 +342,8 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly)
         }
     }
 }
+
+K kdbldap_unbind(K unused)
+{
+    return ki(ldap_unbind_ext(LDAP_SESSION,NULL,NULL));
+}

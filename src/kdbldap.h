@@ -34,6 +34,9 @@ EXP K kdbldap_bind(K dn, K cred);
 /* TODO */
 EXP K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly);
 
+/* TODO */
+EXP K kdbldap_unbind(K unused);
+
 #ifdef __cplusplus
 }
 #endif
