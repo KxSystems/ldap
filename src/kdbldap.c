@@ -57,7 +57,9 @@ K kdbldap_init(K uris)
             csvUris[currentLen]=',';
         ++currentLen;
     }
-    return ki(ldap_initialize( &LDAP_SESSION, csvUris));
+    int res = ldap_initialize( &LDAP_SESSION, csvUris);
+    free(csvUris);
+    return ki(res);
 }
 
 static K setIntOption(LDAP* ld, int option, K value)
@@ -265,11 +267,12 @@ K kdbldap_bind(K dn, K cred)
     return ki(res);
 }
 
-K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly, K sizeLimit)
+K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K sizeLimit)
 {
     CHECK_PARAM_STRING_TYPE(baseDn,"search");
     CHECK_PARAM_INT_TYPE(scope,"search");
     CHECK_PARAM_STRING_TYPE(filter,"search");
+    CHECK_PARAM_TYPE(attrs,KS,"search");
     CHECK_PARAM_INT_TYPE(attrsOnly,"search");
     CHECK_PARAM_INT_TYPE(sizeLimit,"search");
     char* baseStr = createString(baseDn);
@@ -277,19 +280,29 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly, K sizeLimit)
     int scopeInt = getInt(scope);
     int attrsOnlyInt = getInt(attrsOnly);
     int maxSize = getInt(sizeLimit);
+    char** attrsArr = NULL;
+    if (attrs->n > 0)
+    {
+        attrsArr = malloc (((attrs->n)+1) * sizeof(char*));
+        int x=0;
+        for (x=0;x<attrs->n;x++)
+            attrsArr[x]=kS(attrs)[x];
+        attrsArr[x]=NULL;
+    }
     LDAPMessage* msg = NULL;
     int res = ldap_search_ext_s(
               LDAP_SESSION,
               baseStr,
               scopeInt,  /* e.g. LDAP_SCOPE_SUBTREE */
               filterStr,
-              NULL, /* char* attrs[] */
+              attrsArr, /* char* attrs[] */
               attrsOnlyInt, /* 0 = attribute values and descriptions, otherwise just descriptions */
               NULL, /* LDAPControl **serverctrls. NULL for no serverctrls */
               NULL, /* LDAPControl **clientctrls. NULL for no clientctrls */
               NULL, /* struct timeval *timeout. NULL is not time limit */
               maxSize,  /* 0 is LDAP_NO_LIMIT */
               &msg);
+    free(attrsArr);
     free(filterStr);
     free(baseStr);
     switch (res)
