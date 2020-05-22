@@ -123,7 +123,14 @@ Supported TLS options
 
 ### .ldap.bind
 
-TODO
+Bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. See [here](https://ldap.com/the-ldap-bind-operation/) for reference documentation
+
+Syntax: `.ldap.bind[dn;cred]`
+
+Where
+
+- dn is a string/symbol. The DN of the user to authenticate. This should be empty for anonymous simple authentication, and is typically empty for SASL authentication because most SASL mechanisms identify the target account in the encoded credentials. It must be non-empty for non-anonymous simple authentication.
+- cred is a string/symbol. LDAP credentials (e.g. password). Pass empty string/symbol when no password required for connection.
 
 ### .ldap.search
 
