@@ -265,16 +265,18 @@ K kdbldap_bind(K dn, K cred)
     return ki(res);
 }
 
-K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly)
+K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly, K sizeLimit)
 {
     CHECK_PARAM_STRING_TYPE(baseDn,"search");
     CHECK_PARAM_INT_TYPE(scope,"search");
     CHECK_PARAM_STRING_TYPE(filter,"search");
     CHECK_PARAM_INT_TYPE(attrsOnly,"search");
+    CHECK_PARAM_INT_TYPE(sizeLimit,"search");
     char* baseStr = createString(baseDn);
     char* filterStr = createString(filter);
     int scopeInt = getInt(scope);
     int attrsOnlyInt = getInt(attrsOnly);
+    int maxSize = getInt(sizeLimit);
     LDAPMessage* msg = NULL;
     int res = ldap_search_ext_s(
               LDAP_SESSION,
@@ -283,10 +285,10 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly)
               filterStr,
               NULL, /* char* attrs[] */
               attrsOnlyInt, /* 0 = attribute values and descriptions, otherwise just descriptions */
-              NULL, /* LDAPControl **serverctrls */
-              NULL, /* LDAPControl **clientctrls */
-              NULL, /* struct timeval *timeout */
-              LDAP_NO_LIMIT,  /* int sizelimit e.g. LDAP_NO_LIMIT */
+              NULL, /* LDAPControl **serverctrls. NULL for no serverctrls */
+              NULL, /* LDAPControl **clientctrls. NULL for no clientctrls */
+              NULL, /* struct timeval *timeout. NULL is not time limit */
+              maxSize,  /* 0 is LDAP_NO_LIMIT */
               &msg);
     free(filterStr);
     free(baseStr);

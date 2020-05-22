@@ -32,7 +32,7 @@ EXP K kdbldap_get_option(K global,K option);
 EXP K kdbldap_bind(K dn, K cred);
 
 /* TODO */
-EXP K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly);
+EXP K kdbldap_search(K baseDn, K scope, K filter, K attrsOnly, K sizeLimit);
 
 /* TODO */
 EXP K kdbldap_unbind(K unused);
