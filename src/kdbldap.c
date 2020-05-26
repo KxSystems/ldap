@@ -153,6 +153,18 @@ static K getIntOption(LDAP* ld, int option)
     return ki(res);
 } 
 
+static K getTimevalOption(LDAP* ld, int option)
+{
+    int res=0;
+    struct timeval* timeVal = NULL;
+    ldap_get_option(ld, option, &timeVal);
+    if (timeVal==NULL)
+        return ki(0);
+    res = (timeVal->tv_sec * 1000000) + timeVal->tv_usec;
+    free(timeVal);
+    return ki(res);
+}
+
 K kdbldap_get_option(K global,K option)
 {
     CHECK_PARAM_TYPE(global,-KB,"set_option");
@@ -163,14 +175,10 @@ K kdbldap_get_option(K global,K option)
     /* TODO LDAP_OPT_API_FEATURE_INFO */
     /* TODO LDAP_OPT_CLIENT_CONTROLS */
     /* TODO LDAP_OPT_CONNECT_CB */
-    /* TODO LDAP_OPT_DESC (int) */
     /* TODO LDAP_OPT_DIAGNOSTIC_MESSAGE */
     /* TODO LDAP_OPT_MATCHED_DN */
-    /* TODO LDAP_OPT_NETWORK_TIMEOUT */
     /* TODO LDAP_OPT_SERVER_CONTROLS */
-    /* TODO LDAP_OPT_SESSION_REFCNT (int) */
     /* TODO LDAP_OPT_SOCKBUF */
-    /* TODO LDAP_OPT_TIMEOUT */
     if (strcmp(option->s,"LDAP_OPT_API_INFO")==0)
     {
         LDAPAPIInfo info;
@@ -211,6 +219,10 @@ K kdbldap_get_option(K global,K option)
         return getIntOption(ld,LDAP_OPT_DEBUG_LEVEL);
     if (strcmp(option->s,"LDAP_OPT_DEREF")==0)
         return getIntOption(ld,LDAP_OPT_DEREF);
+    if (strcmp(option->s,"LDAP_OPT_DESC")==0)
+        return getIntOption(ld,LDAP_OPT_DESC);
+    if (strcmp(option->s,"LDAP_OPT_NETWORK_TIMEOUT")==0)
+        return getTimevalOption(ld,LDAP_OPT_NETWORK_TIMEOUT);
     if (strcmp(option->s,"LDAP_OPT_PROTOCOL_VERSION")==0)
         return getIntOption(ld,LDAP_OPT_PROTOCOL_VERSION);
     if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
@@ -221,6 +233,8 @@ K kdbldap_get_option(K global,K option)
         return getIntOption(ld,LDAP_OPT_SIZELIMIT);
     if (strcmp(option->s,"LDAP_OPT_TIMELIMIT")==0)
         return getIntOption(ld,LDAP_OPT_TIMELIMIT);
+    if (strcmp(option->s,"LDAP_OPT_TIMEOUT")==0)
+        return getTimevalOption(ld,LDAP_OPT_TIMEOUT);
     /* SASL SUPPORTED OPTIONS */
     /* TODO LDAP_OPT_X_SASL_AUTHCID */
     /* TODO LDAP_OPT_X_SASL_AUTHZID */

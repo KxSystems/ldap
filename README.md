@@ -100,11 +100,14 @@ Value returned from function depends on options used. Supported LDAP options
 - LDAP_OPT_CONNECT_ASYNC (returns int)
 - LDAP_OPT_DEBUG_LEVEL (returns int)
 - LDAP_OPT_DEREF (returns int)
+- LDAP_OPT_DESC (returns int)
+- LDAP_OPT_NETWORK_TIMEOUT (return int representing microseconds)
 - LDAP_OPT_PROTOCOL_VERSION (returns int)
 - LDAP_OPT_REFERRALS (returns int)
 - LDAP_OPT_RESULT_CODE (returns int)
 - LDAP_OPT_SIZELIMIT (returns int)
 - LDAP_OPT_TIMELIMIT (returns int)
+- LDAP_OPT_TIMEOUT (return int representing microseconds)
 
 Supported SASL options
 
