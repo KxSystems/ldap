@@ -57,6 +57,7 @@ Supported LDAP options
 - LDAP_OPT_DEBUG_LEVEL (value data type int/long)
 - LDAP_OPT_DEREF (value data type int/long)
 - LDAP_OPT_NETWORK_TIMEOUT (value data type int/long - representing microseconds)
+- LDAP_OPT_MATCHED_DN (value data type string/symbol)
 - LDAP_OPT_PROTOCOL_VERSION (value data type int/long)
 - LDAP_OPT_REFERRALS (value data type int/long)
 - LDAP_OPT_RESULT_CODE (value data type int/long)
@@ -68,6 +69,7 @@ Supported LDAP options
 Supported SASL options
 
 - LDAP_OPT_X_SASL_NOCANON (value data type int/long)
+- LDAP_OPT_X_SASL_SECPROPS (value data type string/symbol)
 - TODO
 
 Supported TCP options
@@ -78,8 +80,16 @@ Supported TCP options
 
 Supported TLS options
 
+- LDAP_OPT_X_TLS_CACERTDIR (value data type string/symbol)
+- LDAP_OPT_X_TLS_CACERTFILE (value data type string/symbol)
+- LDAP_OPT_X_TLS_CERTFILE (value data type string/symbol)
+- LDAP_OPT_X_TLS_CIPHER_SUITE (value data type string/symbol)
+- LDAP_OPT_X_TLS_CRLFILE (value data type string/symbol)
+- LDAP_OPT_X_TLS_DHFILE (value data type string/symbol)
+- LDAP_OPT_X_TLS_KEYFILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_NEWCTX (value data type int/long)
 - LDAP_OPT_X_TLS_PROTOCOL_MIN (value data type int/long)
+- LDAP_OPT_X_TLS_RANDOM_FILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_REQUIRE_CERT (value data type int/long)
 - TODO
 
