@@ -111,6 +111,7 @@ Value returned from function depends on options used. Supported LDAP options
 - LDAP_OPT_DEBUG_LEVEL (returns int)
 - LDAP_OPT_DEREF (returns int)
 - LDAP_OPT_DESC (returns int)
+- LDAP_OPT_MATCHED_DN (returns string)
 - LDAP_OPT_NETWORK_TIMEOUT (return int representing microseconds)
 - LDAP_OPT_PROTOCOL_VERSION (returns int)
 - LDAP_OPT_REFERRALS (returns int)
@@ -121,7 +122,10 @@ Value returned from function depends on options used. Supported LDAP options
 
 Supported SASL options
 
+- LDAP_OPT_X_SASL_MECH (returns string)
+- LDAP_OPT_X_SASL_MECHLIST (returns string)
 - LDAP_OPT_X_SASL_NOCANON (returns int)
+- LDAP_OPT_X_SASL_USERNAME (returns string)
 - TODO
 
 Supported TCP options
@@ -132,7 +136,15 @@ Supported TCP options
 
 Supported TLS options
 
+- LDAP_OPT_X_TLS_CACERTDIR (returns string)
+- LDAP_OPT_X_TLS_CACERTFILE (returns string)
+- LDAP_OPT_X_TLS_CERTFILE (returns string)
+- LDAP_OPT_X_TLS_CIPHER_SUITE (returns string)
+- LDAP_OPT_X_TLS_CRLFILE (returns string)
+- LDAP_OPT_X_TLS_DHFILE (returns string)
+- LDAP_OPT_X_TLS_KEYFILE (returns string)
 - LDAP_OPT_X_TLS_PROTOCOL_MIN (returns int)
+- LDAP_OPT_X_TLS_RANDOM_FILE (returns string)
 - LDAP_OPT_X_TLS_REQUIRE_CERT (returns int)
 - TODO
 
