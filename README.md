@@ -136,7 +136,7 @@ Where
 
 Search for partial or complete copies of entries based on a search criteria.
 
-Syntax: .ldap.search[baseDn;scope;filter;attrs;attrsOnly;sizeLimit]
+Syntax: .ldap.search[baseDn;scope;filter;attrs;attrsOnly;timeLimit;sizeLimit]
 
 Where
 
@@ -149,6 +149,7 @@ Where
 - filter is a string/symbol. The filter to be applied to the search ([reference](https://ldap.com/ldap-filters/))
 - attrs is a symbol list. The set of attributes to include in the result. If a specific set of attribute descriptions are listed, then only those attributes should be included in matching entries. The special value “*” indicates that all user attributes should be included in matching entries. The special value “+” indicates that all operational attributes should be included in matching entries. The special value “1.1” indicates that no attributes should be included in matching entries. Some servers may also support the ability to use the “@” symbol followed by an object class name (e.g., “@inetOrgPerson”) to request all attributes associated with that object class. If the set of attributes to request is empty, then the server should behave as if the value “*” was specified to request that all user attributes be included in entries that are returned.
 - attrsOnly is an int/long. Should be set to a non-zero value if only attribute descriptions are wanted. It should be set to zero (0) if both attributes descriptions and attribute values are wanted.
+- timeLimit is an int/long. Max number of microseconds to wait for a result. 0 represents no limit. Note that the server may impose its own limit.
 - sizeLimit is an int/long. Max number of entries to use in the result. 0 represents no limit. Note that the server may impose its own limit.
 
 ### .ldap.unbind
