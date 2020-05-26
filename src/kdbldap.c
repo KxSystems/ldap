@@ -69,6 +69,14 @@ static K setIntOption(LDAP* ld, int option, K value)
     return ki(ldap_set_option(ld, option, &val));
 } 
 
+static K setTimevalOption(LDAP* ld, int option, K value)
+{
+    CHECK_PARAM_INT_TYPE(value,"set_option");
+    int val = getInt(value);
+    struct timeval timeVal = {val/1000000, val%1000000};
+    return ki(ldap_set_option(ld, option, &timeVal));
+}
+
 K kdbldap_set_option(K global, K option,K value)
 {
     CHECK_PARAM_TYPE(global,-KB,"set_option");
@@ -80,15 +88,15 @@ K kdbldap_set_option(K global, K option,K value)
     /* TODO LDAP_OPT_CONNECT_CB */
     /* TODO LDAP_OPT_DIAGNOSTIC_MESSAGE */
     /* TODO LDAP_OPT_MATCHED_DN */
-    /* TODO LDAP_OPT_NETWORK_TIMEOUT */
     /* TODO LDAP_OPT_SERVER_CONTROLS */
-    /* TODO LDAP_OPT_TIMEOUT */
     if (strcmp(option->s,"LDAP_OPT_CONNECT_ASYNC")==0)
         return setIntOption(ld,LDAP_OPT_CONNECT_ASYNC,value);
     if (strcmp(option->s,"LDAP_OPT_DEBUG_LEVEL")==0)
         return setIntOption(ld,LDAP_OPT_DEBUG_LEVEL,value);
     if (strcmp(option->s,"LDAP_OPT_DEREF")==0)
         return setIntOption(ld,LDAP_OPT_DEREF,value);
+    if (strcmp(option->s,"LDAP_OPT_NETWORK_TIMEOUT")==0)
+        return setTimevalOption(ld,LDAP_OPT_NETWORK_TIMEOUT,value);
     if (strcmp(option->s,"LDAP_OPT_PROTOCOL_VERSION")==0)
         return setIntOption(ld,LDAP_OPT_PROTOCOL_VERSION,value);
     if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
@@ -99,6 +107,8 @@ K kdbldap_set_option(K global, K option,K value)
         return setIntOption(ld,LDAP_OPT_SIZELIMIT,value);
     if (strcmp(option->s,"LDAP_OPT_TIMELIMIT")==0)
         return setIntOption(ld,LDAP_OPT_TIMELIMIT,value);
+    if (strcmp(option->s,"LDAP_OPT_TIMEOUT")==0)
+        return setTimevalOption(ld,LDAP_OPT_TIMEOUT,value);
     /* SASL SUPPORTED OPTIONS */
     /* TODO LDAP_OPT_X_SASL_MAXBUFSIZE */
     if (strcmp(option->s,"LDAP_OPT_X_SASL_NOCANON")==0)

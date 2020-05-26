@@ -56,11 +56,13 @@ Supported LDAP options
 - LDAP_OPT_CONNECT_ASYNC (value data type int/long)
 - LDAP_OPT_DEBUG_LEVEL (value data type int/long)
 - LDAP_OPT_DEREF (value data type int/long)
+- LDAP_OPT_NETWORK_TIMEOUT (value data type int/long - representing microseconds)
 - LDAP_OPT_PROTOCOL_VERSION (value data type int/long)
 - LDAP_OPT_REFERRALS (value data type int/long)
 - LDAP_OPT_RESULT_CODE (value data type int/long)
 - LDAP_OPT_SIZELIMIT (value data type int/long)
 - LDAP_OPT_TIMELIMIT (value data type int/long)
+- LDAP_OPT_TIMEOUT (value data type int/long - representing microseconds)
 - TODO further options
 
 Supported SASL options
