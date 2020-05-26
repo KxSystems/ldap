@@ -267,20 +267,23 @@ K kdbldap_bind(K dn, K cred)
     return ki(res);
 }
 
-K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K sizeLimit)
+K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
 {
     CHECK_PARAM_STRING_TYPE(baseDn,"search");
     CHECK_PARAM_INT_TYPE(scope,"search");
     CHECK_PARAM_STRING_TYPE(filter,"search");
     CHECK_PARAM_TYPE(attrs,KS,"search");
     CHECK_PARAM_INT_TYPE(attrsOnly,"search");
+    CHECK_PARAM_INT_TYPE(timeLimit,"search");
     CHECK_PARAM_INT_TYPE(sizeLimit,"search");
     char* baseStr = createString(baseDn);
     char* filterStr = createString(filter);
     int scopeInt = getInt(scope);
     int attrsOnlyInt = getInt(attrsOnly);
+    int maxTime = getInt(timeLimit);
     int maxSize = getInt(sizeLimit);
     char** attrsArr = NULL;
+    struct timeval timeout = {maxTime/1000000, maxTime%1000000};
     if (attrs->n > 0)
     {
         attrsArr = malloc (((attrs->n)+1) * sizeof(char*));
@@ -297,9 +300,9 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K sizeLimit)
               filterStr,
               attrsArr, /* char* attrs[] */
               attrsOnlyInt, /* 0 = attribute values and descriptions, otherwise just descriptions */
-              NULL, /* LDAPControl **serverctrls. NULL for no serverctrls */
-              NULL, /* LDAPControl **clientctrls. NULL for no clientctrls */
-              NULL, /* struct timeval *timeout. NULL is not time limit */
+              NULL, /* TODO LDAPControl **serverctrls. NULL for no serverctrls */
+              NULL, /* TODO LDAPControl **clientctrls. NULL for no clientctrls */
+              (maxTime>0?(&timeout):NULL), /* struct timeval *timeout. NULL is not time limit */
               maxSize,  /* 0 is LDAP_NO_LIMIT */
               &msg);
     free(attrsArr);
