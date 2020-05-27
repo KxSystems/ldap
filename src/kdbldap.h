@@ -23,10 +23,16 @@ extern "C" {
 EXP K kdbldap_init(K uris);
 
 /* TODO */
-EXP K kdbldap_set_option(K global,K option,K value);
+EXP K kdbldap_set_global_option(K option,K value);
 
 /* TODO */
-EXP K kdbldap_get_option(K global,K option);
+EXP K kdbldap_set_option(K option,K value);
+
+/* TODO */
+EXP K kdbldap_get_global_option(K option);
+
+/* TODO */
+EXP K kdbldap_get_option(K option);
 
 /* TODO */
 EXP K kdbldap_bind(K dn, K cred);

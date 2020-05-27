@@ -41,13 +41,12 @@ Returns 0 if successful.
 
 ### .ldap.setOption
 
-Sets options globally or per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
+Sets options per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
-Syntax: `.ldap.setOption[global;option;value]`
+Syntax: `.ldap.setOption[option;value]`
 
 Where
 
-- global is a boolean on whether to set the value globally (true) or for the session (false)
 - option is a symbol for the option you wish to set. See supported options below.
 - value is the value relating to the option. The data type depends on the option selected (see below)
 
@@ -92,6 +91,12 @@ Supported TLS options
 - LDAP_OPT_X_TLS_RANDOM_FILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_REQUIRE_CERT (value data type int/long)
 - TODO
+
+### .ldap.setGlobalOption
+
+Sets options globally that affect LDAP operating procedures. Reference .ldap.setOption for params & details.
+
+Syntax: `.ldap.setGlobalOption[option;value]`
 
 ### .ldap.getOption
 
@@ -147,6 +152,12 @@ Supported TLS options
 - LDAP_OPT_X_TLS_RANDOM_FILE (returns string)
 - LDAP_OPT_X_TLS_REQUIRE_CERT (returns int)
 - TODO
+
+### .ldap.getGlobalOption
+
+Gets options globally that affect LDAP operating procedures. Reference .ldap.getOption for details and parameter details
+
+Syntax: `.ldap.getGlobalOption[option]`
 
 ### .ldap.bind
 

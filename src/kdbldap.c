@@ -86,11 +86,9 @@ static K setTimevalOption(LDAP* ld, int option, K value)
     return ki(ldap_set_option(ld, option, &timeVal));
 }
 
-K kdbldap_set_option(K global, K option,K value)
+static K set_option(LDAP* ld, K option,K value)
 {
-    CHECK_PARAM_TYPE(global,-KB,"set_option");
     CHECK_PARAM_TYPE(option,-KS,"set_option");
-    LDAP* ld = (global->g)?NULL:LDAP_SESSION;
     
     /* LDAP SUPPORTED OPTIONS */
     /* TODO LDAP_OPT_CLIENT_CONTROLS */
@@ -165,6 +163,16 @@ K kdbldap_set_option(K global, K option,K value)
     return krr("Unsupported option");
 }
 
+K kdbldap_set_global_option(K option,K value)
+{
+    return set_option(NULL,option,value);
+}
+
+K kdbldap_set_option(K option,K value)
+{
+    return set_option(LDAP_SESSION,option,value);
+}
+
 static K getStringOption(LDAP* ld, int option)
 {
     char* valueStr = NULL;
@@ -197,11 +205,9 @@ static K getTimevalOption(LDAP* ld, int option)
     return ki(res);
 }
 
-K kdbldap_get_option(K global,K option)
+static K get_option(LDAP* ld,K option)
 {
-    CHECK_PARAM_TYPE(global,-KB,"set_option");
     CHECK_PARAM_TYPE(option,-KS,"set_option");
-    LDAP* ld = (global->g)?NULL:LDAP_SESSION;
     
     /* LDAP SUPPORTED OPTIONS */
     /* TODO LDAP_OPT_API_FEATURE_INFO */
@@ -318,6 +324,16 @@ K kdbldap_get_option(K global,K option)
         return getIntOption(ld,LDAP_OPT_X_TLS_REQUIRE_CERT);
     /* TODO LDAP_OPT_X_TLS_SSL_CTX */
     return krr("Unsupported option");
+}
+
+K kdbldap_get_global_option(K option)
+{
+    return get_option(NULL,option);
+}
+
+K kdbldap_get_option(K option)
+{
+    return get_option(LDAP_SESSION,option);
 }
 
 K kdbldap_bind(K dn, K cred)
