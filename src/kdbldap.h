@@ -37,6 +37,8 @@ EXP K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLi
 /* TODO */
 EXP K kdbldap_unbind(K unused);
 
+EXP K kdbldap_err2string(K err);
+
 #ifdef __cplusplus
 }
 #endif

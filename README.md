@@ -184,3 +184,13 @@ Where
 Unbind from the directory, terminate the current association, and free resources.
 
 Syntax: `.ldap.unbind[unused]`
+
+### .ldap.err2string
+
+Returns a string description of an LDAP error code. The error codes are negative for an API error, 0 for success, and positive for a LDAP result code
+
+Syntax: `.ldap.err2string[err]`
+
+Where 
+
+- err is an ldap error code

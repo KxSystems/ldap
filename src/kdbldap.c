@@ -433,3 +433,10 @@ K kdbldap_unbind(K unused)
 {
     return ki(ldap_unbind_ext(LDAP_SESSION,NULL,NULL));
 }
+
+K kdbldap_err2string(K err)
+{
+    CHECK_PARAM_INT_TYPE(err,"err2string");
+    int errInt = getInt(err);
+    return kp(ldap_err2string(errInt));
+}
