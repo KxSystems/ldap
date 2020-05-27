@@ -7,5 +7,6 @@ getOption:`kdbldap 2:(`kdbldap_get_option;2)
 bind:`kdbldap 2:(`kdbldap_bind;2)
 search:`kdbldap 2:(`kdbldap_search;7)
 unbind:`kdbldap 2:(`kdbldap_unbind;1)
+err2string:`kdbldap 2:(`kdbldap_err2string;1)
 
 \d .
