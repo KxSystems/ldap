@@ -3,12 +3,11 @@
 #include "kdbldap.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "sessions.h"
 
 #define CHECK_PARAM_TYPE(x,y,z) {if (x->t != y) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_STRING_TYPE(x,z) {if (x->t != -KS && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_INT_TYPE(x,z) {if (x->t != -KI && x->t != -KJ) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
-
-static LDAP* LDAP_SESSION = NULL;
 
 static int getInt(K val)
 {
@@ -39,11 +38,13 @@ static char* createString(K in)
     return newStr;
 }
 
-K kdbldap_init(K uris)
+K kdbldap_init(K sess, K uris)
 {
+    CHECK_PARAM_INT_TYPE(sess,"init");
     CHECK_PARAM_TYPE(uris,KS,"init");
     char* csvUris = NULL;
     int x,currentLen = 0;
+    int idx = getInt(sess);
     for (x=0;x<uris->n;x++)
     {
         char* uri = kS(uris)[x];
@@ -57,8 +58,11 @@ K kdbldap_init(K uris)
             csvUris[currentLen]=',';
         ++currentLen;
     }
-    int res = ldap_initialize( &LDAP_SESSION, csvUris);
+    LDAP* session = NULL;
+    int res = ldap_initialize( &session, csvUris);
     free(csvUris);
+    if (LDAP_SUCCESS == res)
+        addSession(idx,session);
     return ki(res);
 }
 
@@ -168,9 +172,12 @@ K kdbldap_set_global_option(K option,K value)
     return set_option(NULL,option,value);
 }
 
-K kdbldap_set_option(K option,K value)
+K kdbldap_set_option(K sess,K option,K value)
 {
-    return set_option(LDAP_SESSION,option,value);
+    CHECK_PARAM_INT_TYPE(sess,"set_option");
+    int idx = getInt(sess);
+    void* session = getSession(idx);
+    return set_option(session,option,value);
 }
 
 static K getStringOption(LDAP* ld, int option)
@@ -331,27 +338,33 @@ K kdbldap_get_global_option(K option)
     return get_option(NULL,option);
 }
 
-K kdbldap_get_option(K option)
+K kdbldap_get_option(K sess,K option)
 {
-    return get_option(LDAP_SESSION,option);
+    CHECK_PARAM_INT_TYPE(sess,"get_option");
+    int idx = getInt(sess);
+    void* session = getSession(idx);
+    return get_option(session,option);
 }
 
-K kdbldap_bind(K dn, K cred)
+K kdbldap_bind(K sess,K dn, K cred)
 {
     CHECK_PARAM_STRING_TYPE(dn,"bind");
-    CHECK_PARAM_STRING_TYPE(cred,"cred");
+    CHECK_PARAM_STRING_TYPE(cred,"bind");
+    CHECK_PARAM_INT_TYPE(sess,"bind");
+    int idx = getInt(sess);
+    void* session = getSession(idx);
     char* dnStr = createString(dn);
     char* credStr = createString(cred);
     struct berval pass = { 0, NULL };
     ber_str2bv(credStr,0,0,&pass);
     /* TODO other bind params */
-    int res = ldap_sasl_bind_s( LDAP_SESSION,dnStr,LDAP_SASL_SIMPLE,&pass,NULL,NULL,NULL);
+    int res = ldap_sasl_bind_s( session,dnStr,LDAP_SASL_SIMPLE,&pass,NULL,NULL,NULL);
     free(dnStr);
     free(credStr);
     return ki(res);
 }
 
-K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
+K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
 {
     CHECK_PARAM_STRING_TYPE(baseDn,"search");
     CHECK_PARAM_INT_TYPE(scope,"search");
@@ -360,6 +373,9 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit,
     CHECK_PARAM_INT_TYPE(attrsOnly,"search");
     CHECK_PARAM_INT_TYPE(timeLimit,"search");
     CHECK_PARAM_INT_TYPE(sizeLimit,"search");
+    CHECK_PARAM_INT_TYPE(sess,"search");
+    int idx = getInt(sess);
+    void* session = getSession(idx);
     char* baseStr = createString(baseDn);
     char* filterStr = createString(filter);
     int scopeInt = getInt(scope);
@@ -378,7 +394,7 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit,
     }
     LDAPMessage* msg = NULL;
     int res = ldap_search_ext_s(
-              LDAP_SESSION,
+              session,
               baseStr,
               scopeInt,  /* e.g. LDAP_SCOPE_SUBTREE */
               filterStr,
@@ -400,10 +416,10 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit,
         {
             K Kentries = knk(0);
             LDAPMessage* entry = NULL;
-            for (entry=ldap_first_entry(LDAP_SESSION,msg);entry!=NULL;entry=ldap_next_entry(LDAP_SESSION,entry))
+            for (entry=ldap_first_entry(session,msg);entry!=NULL;entry=ldap_next_entry(session,entry))
             {
                 K Kentry = knk(0);
-                char* entryDn = ldap_get_dn(LDAP_SESSION,entry);
+                char* entryDn = ldap_get_dn(session,entry);
                 if (entryDn)
                 {
                     jk(&Kentry,kp(entryDn));
@@ -414,10 +430,10 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit,
                 BerElement* pBer = NULL;
                 char* attribute = NULL;
                 K Kattrs = knk(0);
-                for (attribute=ldap_first_attribute(LDAP_SESSION,entry,&pBer);attribute!=NULL;attribute=ldap_next_attribute(LDAP_SESSION,entry,pBer))
+                for (attribute=ldap_first_attribute(session,entry,&pBer);attribute!=NULL;attribute=ldap_next_attribute(session,entry,pBer))
                 {
                     K kAttrVals = knk(0);
-                    struct berval** vals = ldap_get_values_len(LDAP_SESSION,entry,attribute);
+                    struct berval** vals = ldap_get_values_len(session,entry,attribute);
                     if (vals!=NULL)
                     {
                         int valCount = ldap_count_values_len(vals);
@@ -445,9 +461,15 @@ K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit,
     }
 }
 
-K kdbldap_unbind(K unused)
+K kdbldap_unbind(K sess)
 {
-    return ki(ldap_unbind_ext(LDAP_SESSION,NULL,NULL));
+    CHECK_PARAM_INT_TYPE(sess,"unbind");
+    int idx = getInt(sess);
+    void* session = getSession(idx);
+    int res = ldap_unbind_ext(session,NULL,NULL);
+    if (LDAP_SUCCESS == res)
+        removeSession(idx);
+    return ki(res);
 }
 
 K kdbldap_err2string(K err)
