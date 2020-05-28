@@ -57,6 +57,7 @@ Supported LDAP options
 - LDAP_OPT_CONNECT_ASYNC (value data type int/long)
 - LDAP_OPT_DEBUG_LEVEL (value data type int/long)
 - LDAP_OPT_DEREF (value data type int/long)
+- LDAP_OPT_DIAGNOSTIC_MESSAGE (value data type string/symbol)
 - LDAP_OPT_NETWORK_TIMEOUT (value data type int/long - representing microseconds)
 - LDAP_OPT_MATCHED_DN (value data type string/symbol)
 - LDAP_OPT_PROTOCOL_VERSION (value data type int/long)
@@ -69,9 +70,12 @@ Supported LDAP options
 
 Supported SASL options
 
+- LDAP_OPT_X_SASL_MAXBUFSIZE (value data type long)
 - LDAP_OPT_X_SASL_NOCANON (value data type int/long)
 - LDAP_OPT_X_SASL_SECPROPS (value data type string/symbol)
-- TODO
+- LDAP_OPT_X_SASL_SSF_EXTERNAL (value data type long)
+- LDAP_OPT_X_SASL_SSF_MAX (value data type long)
+- LDAP_OPT_X_SASL_SSF_MIN (value data type long)
 
 Supported TCP options
 
@@ -85,6 +89,7 @@ Supported TLS options
 - LDAP_OPT_X_TLS_CACERTFILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_CERTFILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_CIPHER_SUITE (value data type string/symbol)
+- LDAP_OPT_X_TLS_CRLCHECK (value data type int/long)
 - LDAP_OPT_X_TLS_CRLFILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_DHFILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_KEYFILE (value data type string/symbol)
@@ -102,7 +107,7 @@ Syntax: `.ldap.setGlobalOption[option;value]`
 
 ### .ldap.getOption
 
-Gets options globally or per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
+Gets session options that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
 Syntax: `.ldap.getOption[sess;option]`
 
@@ -118,6 +123,7 @@ Value returned from function depends on options used. Supported LDAP options
 - LDAP_OPT_DEBUG_LEVEL (returns int)
 - LDAP_OPT_DEREF (returns int)
 - LDAP_OPT_DESC (returns int)
+- LDAP_OPT_DIAGNOSTIC_MESSAGE (returns string)
 - LDAP_OPT_MATCHED_DN (returns string)
 - LDAP_OPT_NETWORK_TIMEOUT (return int representing microseconds)
 - LDAP_OPT_PROTOCOL_VERSION (returns int)
@@ -129,9 +135,16 @@ Value returned from function depends on options used. Supported LDAP options
 
 Supported SASL options
 
+- LDAP_OPT_X_SASL_AUTHCID (returns string)
+- LDAP_OPT_X_SASL_AUTHZID (returns string)
+- LDAP_OPT_X_SASL_MAXBUFSIZE (returns long)
 - LDAP_OPT_X_SASL_MECH (returns string)
 - LDAP_OPT_X_SASL_MECHLIST (returns string)
 - LDAP_OPT_X_SASL_NOCANON (returns int)
+- LDAP_OPT_X_SASL_REALM (returns string)
+- LDAP_OPT_X_SASL_SSF (returns long)
+- LDAP_OPT_X_SASL_SSF_MAX (returns long)
+- LDAP_OPT_X_SASL_SSF_MIN (returns long)
 - LDAP_OPT_X_SASL_USERNAME (returns string)
 - TODO
 
@@ -147,6 +160,7 @@ Supported TLS options
 - LDAP_OPT_X_TLS_CACERTFILE (returns string)
 - LDAP_OPT_X_TLS_CERTFILE (returns string)
 - LDAP_OPT_X_TLS_CIPHER_SUITE (returns string)
+- LDAP_OPT_X_TLS_CRLCHECK (returns int)
 - LDAP_OPT_X_TLS_CRLFILE (returns string)
 - LDAP_OPT_X_TLS_DHFILE (returns string)
 - LDAP_OPT_X_TLS_KEYFILE (returns string)
