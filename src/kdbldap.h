@@ -1,5 +1,5 @@
-#ifndef DELTALDAP_H_
-#define DELTALDAP_H_
+#ifndef KDBLDAP_H_
+#define KDBLDAP_H_
 
 #include "k.h"
 
