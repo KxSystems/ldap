@@ -82,6 +82,13 @@ static K setIntOption(LDAP* ld, int option, K value)
     return ki(ldap_set_option(ld, option, &val));
 } 
 
+static K setBerLenOption(LDAP* ld, int option, K value)
+{
+    CHECK_PARAM_TYPE(value,-KJ,"set_option");
+    ber_len_t val = value->j;
+    return ki(ldap_set_option(ld, option, &val));
+} 
+
 static K setTimevalOption(LDAP* ld, int option, K value)
 {
     CHECK_PARAM_INT_TYPE(value,"set_option");
@@ -95,9 +102,6 @@ static K set_option(LDAP* ld, K option,K value)
     CHECK_PARAM_TYPE(option,-KS,"set_option");
     
     /* LDAP SUPPORTED OPTIONS */
-    /* TODO LDAP_OPT_CLIENT_CONTROLS */
-    /* TODO LDAP_OPT_CONNECT_CB */
-    /* TODO LDAP_OPT_DIAGNOSTIC_MESSAGE */
     /* TODO LDAP_OPT_SERVER_CONTROLS */
     if (strcmp(option->s,"LDAP_OPT_CONNECT_ASYNC")==0)
         return setIntOption(ld,LDAP_OPT_CONNECT_ASYNC,value);
@@ -105,6 +109,8 @@ static K set_option(LDAP* ld, K option,K value)
         return setIntOption(ld,LDAP_OPT_DEBUG_LEVEL,value);
     if (strcmp(option->s,"LDAP_OPT_DEREF")==0)
         return setIntOption(ld,LDAP_OPT_DEREF,value);
+    if (strcmp(option->s,"LDAP_OPT_DIAGNOSTIC_MESSAGE")==0)
+        return setStringOption(ld,LDAP_OPT_DIAGNOSTIC_MESSAGE,value);
     if (strcmp(option->s,"LDAP_OPT_MATCHED_DN")==0)
         return setStringOption(ld,LDAP_OPT_MATCHED_DN,value);
     if (strcmp(option->s,"LDAP_OPT_NETWORK_TIMEOUT")==0)
@@ -122,14 +128,18 @@ static K set_option(LDAP* ld, K option,K value)
     if (strcmp(option->s,"LDAP_OPT_TIMEOUT")==0)
         return setTimevalOption(ld,LDAP_OPT_TIMEOUT,value);
     /* SASL SUPPORTED OPTIONS */
-    /* TODO LDAP_OPT_X_SASL_MAXBUFSIZE */
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_MAXBUFSIZE")==0)
+        return setBerLenOption(ld,LDAP_OPT_X_SASL_MAXBUFSIZE,value);
     if (strcmp(option->s,"LDAP_OPT_X_SASL_NOCANON")==0)
         return setIntOption(ld,LDAP_OPT_X_SASL_NOCANON,value);
     if (strcmp(option->s,"LDAP_OPT_X_SASL_SECPROPS")==0)
         return setStringOption(ld,LDAP_OPT_X_SASL_SECPROPS,value);
-    /* TODO LDAP_OPT_X_SASL_SSF_EXTERNAL */
-    /* TODO LDAP_OPT_X_SASL_SSF_MAX */
-    /* TODO LDAP_OPT_X_SASL_SSF_MIN */
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_EXTERNAL")==0)
+        return setBerLenOption(ld,LDAP_OPT_X_SASL_SSF_EXTERNAL,value);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MAX")==0)
+        return setBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MAX,value);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MIN")==0)
+        return setBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MIN,value);
     /* TCP SUPPORTED OPTIONS */
     if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_IDLE")==0)
         return setIntOption(ld,LDAP_OPT_X_KEEPALIVE_IDLE,value);
@@ -148,7 +158,8 @@ static K set_option(LDAP* ld, K option,K value)
         return setStringOption(ld,LDAP_OPT_X_TLS_CIPHER_SUITE,value);
     /* TODO LDAP_OPT_X_TLS_CONNECT_ARG */
     /* TODO LDAP_OPT_X_TLS_CONNECT_CB */
-    /* TODO LDAP_OPT_X_TLS_CRLCHECK */
+    if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLCHECK")==0)
+        return setIntOption(ld,LDAP_OPT_X_TLS_CRLCHECK,value);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLFILE")==0)
         return setStringOption(ld,LDAP_OPT_X_TLS_CRLFILE,value);
     /* TODO LDAP_OPT_X_TLS_CTX */
@@ -200,6 +211,13 @@ static K getIntOption(LDAP* ld, int option)
     return ki(res);
 } 
 
+static K getBerLenOption(LDAP* ld, int option)
+{
+    ber_len_t res;
+    ldap_get_option(ld, option, &res);
+    return kj(res);
+}
+
 static K getTimevalOption(LDAP* ld, int option)
 {
     int res=0;
@@ -218,11 +236,6 @@ static K get_option(LDAP* ld,K option)
     
     /* LDAP SUPPORTED OPTIONS */
     /* TODO LDAP_OPT_API_FEATURE_INFO */
-    /* TODO LDAP_OPT_CLIENT_CONTROLS */
-    /* TODO LDAP_OPT_CONNECT_CB */
-    /* TODO LDAP_OPT_DIAGNOSTIC_MESSAGE */
-    /* TODO LDAP_OPT_SERVER_CONTROLS */
-    /* TODO LDAP_OPT_SOCKBUF */
     if (strcmp(option->s,"LDAP_OPT_API_INFO")==0)
     {
         LDAPAPIInfo info;
@@ -265,6 +278,8 @@ static K get_option(LDAP* ld,K option)
         return getIntOption(ld,LDAP_OPT_DEREF);
     if (strcmp(option->s,"LDAP_OPT_DESC")==0)
         return getIntOption(ld,LDAP_OPT_DESC);
+    if (strcmp(option->s,"LDAP_OPT_DIAGNOSTIC_MESSAGE")==0)
+        return getStringOption(ld,LDAP_OPT_DIAGNOSTIC_MESSAGE);
     if (strcmp(option->s,"LDAP_OPT_NETWORK_TIMEOUT")==0)
         return getTimevalOption(ld,LDAP_OPT_NETWORK_TIMEOUT);
     if (strcmp(option->s,"LDAP_OPT_MATCHED_DN")==0)
@@ -282,19 +297,26 @@ static K get_option(LDAP* ld,K option)
     if (strcmp(option->s,"LDAP_OPT_TIMEOUT")==0)
         return getTimevalOption(ld,LDAP_OPT_TIMEOUT);
     /* SASL SUPPORTED OPTIONS */
-    /* TODO LDAP_OPT_X_SASL_AUTHCID */
-    /* TODO LDAP_OPT_X_SASL_AUTHZID */
-    /* TODO LDAP_OPT_X_SASL_MAXBUFSIZE */
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_AUTHCID")==0)
+        return getStringOption(ld,LDAP_OPT_X_SASL_AUTHCID);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_AUTHZID")==0)
+        return getStringOption(ld,LDAP_OPT_X_SASL_AUTHZID);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_MAXBUFSIZE")==0)
+        return getBerLenOption(ld,LDAP_OPT_X_SASL_MAXBUFSIZE);
     if (strcmp(option->s,"LDAP_OPT_X_SASL_MECH")==0)
         return getStringOption(ld,LDAP_OPT_X_SASL_MECH);
     if (strcmp(option->s,"LDAP_OPT_X_SASL_MECHLIST")==0)
         return getStringOption(ld,LDAP_OPT_X_SASL_MECHLIST);
     if (strcmp(option->s,"LDAP_OPT_X_SASL_NOCANON")==0)
         return getIntOption(ld,LDAP_OPT_X_SASL_NOCANON);
-    /* TODO LDAP_OPT_X_SASL_REALM */
-    /* TODO LDAP_OPT_X_SASL_SSF */
-    /* TODO LDAP_OPT_X_SASL_SSF_MAX */
-    /* TODO LDAP_OPT_X_SASL_SSF_MIN */
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_REALM")==0)
+        return getStringOption(ld,LDAP_OPT_X_SASL_REALM);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF")==0)
+        return getBerLenOption(ld,LDAP_OPT_X_SASL_SSF);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MAX")==0)
+        return getBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MAX);
+    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MIN")==0)
+        return getBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MIN);
     if (strcmp(option->s,"LDAP_OPT_X_SASL_USERNAME")==0)
         return getStringOption(ld,LDAP_OPT_X_SASL_USERNAME);
     /* TCP SUPPORTED OPTIONS */
@@ -315,7 +337,8 @@ static K get_option(LDAP* ld,K option)
         return getStringOption(ld,LDAP_OPT_X_TLS_CIPHER_SUITE);
     /* TODO LDAP_OPT_X_TLS_CONNECT_ARG */
     /* TODO LDAP_OPT_X_TLS_CONNECT_CB */
-    /* TODO LDAP_OPT_X_TLS_CRLCHECK */
+    if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLCHECK")==0)
+        return getIntOption(ld,LDAP_OPT_X_TLS_CRLCHECK);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLFILE")==0)
         return getStringOption(ld,LDAP_OPT_X_TLS_CRLFILE);
     /* TODO LDAP_OPT_X_TLS_CTX */
