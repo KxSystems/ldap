@@ -20,28 +20,28 @@ extern "C" {
  * @param uris Symbol List type. List of connection URIs.
  * e.g. ldap://127.0.0.1:389
  */
-EXP K kdbldap_init(K uris);
+EXP K kdbldap_init(K sess,K uris);
 
 /* TODO */
 EXP K kdbldap_set_global_option(K option,K value);
 
 /* TODO */
-EXP K kdbldap_set_option(K option,K value);
+EXP K kdbldap_set_option(K sess,K option,K value);
 
 /* TODO */
 EXP K kdbldap_get_global_option(K option);
 
 /* TODO */
-EXP K kdbldap_get_option(K option);
+EXP K kdbldap_get_option(K sess,K option);
 
 /* TODO */
-EXP K kdbldap_bind(K dn, K cred);
+EXP K kdbldap_bind(K sess,K dn, K cred);
 
 /* TODO */
-EXP K kdbldap_search(K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit);
+EXP K kdbldap_search(K sess, K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit);
 
 /* TODO */
-EXP K kdbldap_unbind(K unused);
+EXP K kdbldap_unbind(K sess);
 
 EXP K kdbldap_err2string(K err);
 

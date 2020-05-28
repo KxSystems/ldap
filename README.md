@@ -31,10 +31,11 @@ TODO
 
 Initializes the session with LDAP server connection details. Connection will occur on first operation. Does not create a connection. Reference [ldap_initialize](https://www.openldap.org/software/man.cgi?query=ldap_init&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
-Syntax: `.ldap.init[uris]`
+Syntax: `.ldap.init[sess;uris]`
 
 Where
 
+- sess is an int/long that you will use to track the session in subsequent calls. Should be a unique number for each session you wish to initialize. The number can only be reused to refer to a session after a .ldap.unbind.
 - uris is a symbol list. Each URI in the list must follow the format of schema://host:port , where schema is 'ldap','ldaps','ldapi', or 'cldap'.
 
 Returns 0 if successful.
@@ -43,10 +44,11 @@ Returns 0 if successful.
 
 Sets options per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
-Syntax: `.ldap.setOption[option;value]`
+Syntax: `.ldap.setOption[sess;option;value]`
 
 Where
 
+- sess is an int/long that represents the session previously created via .ldap.init
 - option is a symbol for the option you wish to set. See supported options below.
 - value is the value relating to the option. The data type depends on the option selected (see below)
 
@@ -102,11 +104,11 @@ Syntax: `.ldap.setGlobalOption[option;value]`
 
 Gets options globally or per session that affect LDAP operating procedures. Reference [ldap_set_option](https://www.openldap.org/software/man.cgi?query=ldap_set_option&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
-Syntax: `.ldap.getOption[global;option]`
+Syntax: `.ldap.getOption[sess;option]`
 
 Where
 
-- global is a boolean on whether to set the value globally (true) or for the session (false)
+- sess is an int/long that represents the session previously created via .ldap.init
 - option is a symbol for the option you wish to get. See supported options below
 
 Value returned from function depends on options used. Supported LDAP options
@@ -163,10 +165,11 @@ Syntax: `.ldap.getGlobalOption[option]`
 
 Bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. See [here](https://ldap.com/the-ldap-bind-operation/) for reference documentation
 
-Syntax: `.ldap.bind[dn;cred]`
+Syntax: `.ldap.bind[sess;dn;cred]`
 
 Where
 
+- sess is an int/long that represents the session previously created via .ldap.init
 - dn is a string/symbol. The DN of the user to authenticate. This should be empty for anonymous simple authentication, and is typically empty for SASL authentication because most SASL mechanisms identify the target account in the encoded credentials. It must be non-empty for non-anonymous simple authentication.
 - cred is a string/symbol. LDAP credentials (e.g. password). Pass empty string/symbol when no password required for connection.
 
@@ -174,10 +177,11 @@ Where
 
 Search for partial or complete copies of entries based on a search criteria.
 
-Syntax: .ldap.search[baseDn;scope;filter;attrs;attrsOnly;timeLimit;sizeLimit]
+Syntax: .ldap.search[sess;baseDn;scope;filter;attrs;attrsOnly;timeLimit;sizeLimit]
 
 Where
 
+- sess is an int/long that represents the session previously created via .ldap.init
 - baseDn is a string/symbol. The base of the subtree to search from. An empty string/symbol can be used to search from the root (or when a DN is not known).
 - scope  is an int/long. Can be set to one of the following values:
   - 0 (LDAP_SCOPE_BASE) Only the entry specified will be considered in the search & no subordinates used
@@ -194,7 +198,11 @@ Where
 
 Unbind from the directory, terminate the current association, and free resources.
 
-Syntax: `.ldap.unbind[unused]`
+Syntax: `.ldap.unbind[sess]`
+
+Where 
+
+- sess is an int/long that represents the session previously created via .ldap.init. The number should not longer be used unless .ldap.init and .ldap.bind has been used to create a new session.
 
 ### .ldap.err2string
 
