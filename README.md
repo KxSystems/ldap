@@ -118,6 +118,7 @@ Where
 
 Value returned from function depends on options used. Supported LDAP options
 
+- LDAP_OPT_API_FEATURE_INFO (returns dict containing feature version info - subset of LDAP_OPT_API_INFO)
 - LDAP_OPT_API_INFO (returns dict containing API version info)
 - LDAP_OPT_CONNECT_ASYNC (returns int)
 - LDAP_OPT_DEBUG_LEVEL (returns int)

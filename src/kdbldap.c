@@ -102,7 +102,6 @@ static K set_option(LDAP* ld, K option,K value)
     CHECK_PARAM_TYPE(option,-KS,"set_option");
     
     /* LDAP SUPPORTED OPTIONS */
-    /* TODO LDAP_OPT_SERVER_CONTROLS */
     if (strcmp(option->s,"LDAP_OPT_CONNECT_ASYNC")==0)
         return setIntOption(ld,LDAP_OPT_CONNECT_ASYNC,value);
     if (strcmp(option->s,"LDAP_OPT_DEBUG_LEVEL")==0)
@@ -156,13 +155,10 @@ static K set_option(LDAP* ld, K option,K value)
         return setStringOption(ld,LDAP_OPT_X_TLS_CERTFILE,value);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CIPHER_SUITE")==0)
         return setStringOption(ld,LDAP_OPT_X_TLS_CIPHER_SUITE,value);
-    /* TODO LDAP_OPT_X_TLS_CONNECT_ARG */
-    /* TODO LDAP_OPT_X_TLS_CONNECT_CB */
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLCHECK")==0)
         return setIntOption(ld,LDAP_OPT_X_TLS_CRLCHECK,value);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLFILE")==0)
         return setStringOption(ld,LDAP_OPT_X_TLS_CRLFILE,value);
-    /* TODO LDAP_OPT_X_TLS_CTX */
     if (strcmp(option->s,"LDAP_OPT_X_TLS_DHFILE")==0)
         return setStringOption(ld,LDAP_OPT_X_TLS_DHFILE,value);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_KEYFILE")==0)
@@ -198,7 +194,7 @@ static K getStringOption(LDAP* ld, int option)
     if (valueStr)
     {
         K val = kp(valueStr);
-        free(valueStr);
+        ldap_memfree(valueStr);
         return val;
     }
     return kp("");
@@ -235,7 +231,37 @@ static K get_option(LDAP* ld,K option)
     CHECK_PARAM_TYPE(option,-KS,"set_option");
     
     /* LDAP SUPPORTED OPTIONS */
-    /* TODO LDAP_OPT_API_FEATURE_INFO */
+    if (strcmp(option->s,"LDAP_OPT_API_FEATURE_INFO")==0)
+    {
+        int featureCnt = 0;
+        LDAPAPIInfo info;
+        info.ldapai_info_version = LDAP_API_INFO_VERSION;
+        int res = ldap_get_option(ld, LDAP_OPT_API_INFO, &info);
+        if (res != LDAP_OPT_SUCCESS)
+            return krr("Problem retrieving option");
+        ldap_memfree(info.ldapai_vendor_name);
+        if (info.ldapai_extensions != NULL)
+        {
+            for(featureCnt=0; info.ldapai_extensions[featureCnt] != NULL; featureCnt++);
+            K keys = ktn(KS,featureCnt);
+            K vals = ktn(KI,featureCnt);
+            int i=0;
+            for(i=0; info.ldapai_extensions[i] != NULL; i++)
+            {
+                kS(keys)[i]=ss((char*)info.ldapai_extensions[i]);
+                LDAPAPIFeatureInfo featInfo;
+                featInfo.ldapaif_info_version = LDAP_FEATURE_INFO_VERSION;
+                featInfo.ldapaif_name = info.ldapai_extensions[i];
+                featInfo.ldapaif_version = 0;
+                ldap_get_option(ld, LDAP_OPT_API_FEATURE_INFO, &featInfo);
+                kI(vals)[i]=featInfo.ldapaif_version;
+                ldap_memfree(info.ldapai_extensions[i]);
+            }
+            ldap_memfree(info.ldapai_extensions);
+            return xD(keys,vals);
+        }
+        return xD(ktn(KS,0),ktn(KI,0));
+    }
     if (strcmp(option->s,"LDAP_OPT_API_INFO")==0)
     {
         LDAPAPIInfo info;
@@ -335,13 +361,10 @@ static K get_option(LDAP* ld,K option)
         return getStringOption(ld,LDAP_OPT_X_TLS_CERTFILE);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CIPHER_SUITE")==0)
         return getStringOption(ld,LDAP_OPT_X_TLS_CIPHER_SUITE);
-    /* TODO LDAP_OPT_X_TLS_CONNECT_ARG */
-    /* TODO LDAP_OPT_X_TLS_CONNECT_CB */
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLCHECK")==0)
         return getIntOption(ld,LDAP_OPT_X_TLS_CRLCHECK);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLFILE")==0)
         return getStringOption(ld,LDAP_OPT_X_TLS_CRLFILE);
-    /* TODO LDAP_OPT_X_TLS_CTX */
     if (strcmp(option->s,"LDAP_OPT_X_TLS_DHFILE")==0)
         return getStringOption(ld,LDAP_OPT_X_TLS_DHFILE);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_KEYFILE")==0)
@@ -352,7 +375,6 @@ static K get_option(LDAP* ld,K option)
         return getStringOption(ld,LDAP_OPT_X_TLS_RANDOM_FILE);
     if (strcmp(option->s,"LDAP_OPT_X_TLS_REQUIRE_CERT")==0)
         return getIntOption(ld,LDAP_OPT_X_TLS_REQUIRE_CERT);
-    /* TODO LDAP_OPT_X_TLS_SSL_CTX */
     return krr("Unsupported option");
 }
 
