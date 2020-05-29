@@ -66,7 +66,6 @@ Supported LDAP options
 - LDAP_OPT_SIZELIMIT (value data type int/long)
 - LDAP_OPT_TIMELIMIT (value data type int/long)
 - LDAP_OPT_TIMEOUT (value data type int/long - representing microseconds)
-- TODO further options
 
 Supported SASL options
 
@@ -97,7 +96,6 @@ Supported TLS options
 - LDAP_OPT_X_TLS_PROTOCOL_MIN (value data type int/long)
 - LDAP_OPT_X_TLS_RANDOM_FILE (value data type string/symbol)
 - LDAP_OPT_X_TLS_REQUIRE_CERT (value data type int/long)
-- TODO
 
 ### .ldap.setGlobalOption
 
@@ -147,7 +145,6 @@ Supported SASL options
 - LDAP_OPT_X_SASL_SSF_MAX (returns long)
 - LDAP_OPT_X_SASL_SSF_MIN (returns long)
 - LDAP_OPT_X_SASL_USERNAME (returns string)
-- TODO
 
 Supported TCP options
 
@@ -168,7 +165,6 @@ Supported TLS options
 - LDAP_OPT_X_TLS_PROTOCOL_MIN (returns int)
 - LDAP_OPT_X_TLS_RANDOM_FILE (returns string)
 - LDAP_OPT_X_TLS_REQUIRE_CERT (returns int)
-- TODO
 
 ### .ldap.getGlobalOption
 
