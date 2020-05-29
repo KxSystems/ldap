@@ -474,24 +474,25 @@ K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K tim
                     jk(&Kentry,kp((char*)""));
                 BerElement* pBer = NULL;
                 char* attribute = NULL;
-                K Kattrs = knk(0);
+                K KattrsNames = ktn(KS,0);
+                K kAttrsVals = knk(0);
                 for (attribute=ldap_first_attribute(session,entry,&pBer);attribute!=NULL;attribute=ldap_next_attribute(session,entry,pBer))
                 {
-                    K kAttrVals = knk(0);
+                    K kAttrVal = knk(0);
                     struct berval** vals = ldap_get_values_len(session,entry,attribute);
                     if (vals!=NULL)
                     {
                         int valCount = ldap_count_values_len(vals);
                         int valPos;
                         for (valPos=0;valPos<valCount;valPos++)
-                            jk(&kAttrVals,kpn((char*)vals[valPos]->bv_val,vals[valPos]->bv_len));
+                            jk(&kAttrVal,kpn((char*)vals[valPos]->bv_val,vals[valPos]->bv_len));
                         ldap_value_free_len(vals);
                     }
-                    K Kattribute = knk(2,ks(attribute),kAttrVals);
-                    jk(&Kattrs,Kattribute);
+                    js(&KattrsNames,ss(attribute));
+                    jk(&kAttrsVals,kAttrVal);
                     ldap_memfree(attribute);
                 }
-                jk(&Kentry,Kattrs);
+                jk(&Kentry,xD(KattrsNames,kAttrsVals));
                 jk(&Kentries,Kentry);
             }
             ldap_msgfree(msg);
