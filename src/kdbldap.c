@@ -460,18 +460,19 @@ K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K tim
         case LDAP_SUCCESS:
         {
             K Kentries = knk(0);
+            K Kattrs = knk(0);
             LDAPMessage* entry = NULL;
             for (entry=ldap_first_entry(session,msg);entry!=NULL;entry=ldap_next_entry(session,entry))
             {
-                K Kentry = knk(0);
+                //K Kentry = knk(0);
                 char* entryDn = ldap_get_dn(session,entry);
                 if (entryDn)
                 {
-                    jk(&Kentry,kp(entryDn));
+                    jk(&Kentries,kp(entryDn));
                     ldap_memfree(entryDn);
                 }
                 else
-                    jk(&Kentry,kp((char*)""));
+                    jk(&Kentries,kp((char*)""));
                 BerElement* pBer = NULL;
                 char* attribute = NULL;
                 K KattrsNames = ktn(KS,0);
@@ -492,17 +493,60 @@ K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K tim
                     jk(&kAttrsVals,kAttrVal);
                     ldap_memfree(attribute);
                 }
-                jk(&Kentry,xD(KattrsNames,kAttrsVals));
-                jk(&Kentries,Kentry);
+                jk(&Kattrs,xD(KattrsNames,kAttrsVals));
+            }
+            K entrykeys = ktn(KS,2);
+            kS(entrykeys)[0]=ss((char*)"DN");
+            kS(entrykeys)[1]=ss((char*)"Attributes");
+            K values = knk(0);
+            jk(&values,Kentries);
+            jk(&values,Kattrs);
+            K KallEntries = xT(xD(entrykeys,values));
+
+            K Kreferrals = knk(0);
+            for(entry=ldap_first_reference(session,msg);entry!=NULL;entry=ldap_next_reference(session,entry))
+            {
+                char **refs = NULL;
+                if (ldap_parse_reference(session, entry, &refs, NULL, 0) != LDAP_SUCCESS)
+                    continue;
+                if (refs == NULL)
+                    continue;
+                int i=0;
+                for (i=0; refs[i] != NULL; i++)
+                    jk(&Kreferrals,kp(refs[i]));
+                ber_memvfree((void**)refs);
             }
             ldap_msgfree(msg);
-            /* TODO indication of result code in return value incase of truncation */
-            return Kentries;
+
+            K resultkeys = ktn(KS,3);
+            kS(resultkeys)[0]=ss((char*)"ReturnCode");
+            kS(resultkeys)[1]=ss((char*)"Entries");
+            kS(resultkeys)[2]=ss((char*)"Referrals");
+            K resultvals = knk(0);
+            jk(&resultvals,ki(res));
+            jk(&resultvals,KallEntries);
+            jk(&resultvals,Kreferrals);
+            return xD(resultkeys,resultvals);
         }
         default:
         {
             ldap_msgfree(msg);
-            return ki(res);
+            
+            K entrykeys = ktn(KS,2);
+            kS(entrykeys)[0]=ss((char*)"DN");
+            kS(entrykeys)[1]=ss((char*)"Attributes");
+            K values = knk(0);
+            K KallEntries = xT(xD(entrykeys,values));
+
+            K resultkeys = ktn(KS,3);
+            kS(resultkeys)[0]=ss((char*)"ReturnCode");
+            kS(resultkeys)[1]=ss((char*)"Entries");
+            kS(resultkeys)[2]=ss((char*)"Referrals");
+            K resultvals = knk(0);
+            jk(&resultvals,ki(res));
+            jk(&resultvals,KallEntries);
+            jk(&resultvals,knk(0));
+            return xD(resultkeys,resultvals);
         }
     }
 }
