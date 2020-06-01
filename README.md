@@ -205,6 +205,12 @@ Where
 - timeLimit is an int/long. Max number of microseconds to wait for a result. 0 represents no limit. Note that the server may impose its own limit.
 - sizeLimit is an int/long. Max number of entries to use in the result. 0 represents no limit. Note that the server may impose its own limit.
 
+Returns a dict consisting of 
+
+- ReturnCode - integer TODO
+- Entries - table consisting of DNs and Attributes. Attribute forms a dictionary, were each attribute may contain one or more values.
+- Referrals - list of strings providing the referrals that can be searched to gain access to the required info (if server supports referrals)
+
 ### .ldap.unbind
 
 Unbind from the directory, terminate the current association, and free resources.
