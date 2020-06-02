@@ -402,13 +402,30 @@ K kdbldap_bind(K sess, K dn, K cred, K mech)
     char* dnStr = createString(dn);
     char* credStr = createString(cred);
     char* mechStr = createString(mech);
+    struct berval* scred = NULL;
     struct berval pass = { 0, NULL };
     ber_str2bv(credStr,0,0,&pass);
-    int res = ldap_sasl_bind_s( session,dnStr,((mechStr[0]=='\0')?LDAP_SASL_SIMPLE:mechStr),&pass,NULL,NULL,NULL);
+    int res = ldap_sasl_bind_s( session,dnStr,((mechStr[0]=='\0')?LDAP_SASL_SIMPLE:mechStr),&pass,NULL,NULL,&scred);
     free(dnStr);
     free(credStr);
     free(mechStr);
-    return ki(res);
+    
+    int credSize = 0;
+    if (scred!=NULL)
+        credSize = scred->bv_len;
+
+    K resultkeys = ktn(KS,2);
+    kS(resultkeys)[0]=ss((char*)"ReturnCode");
+    kS(resultkeys)[1]=ss((char*)"Credentials");
+    K resultvals = knk(0);
+    jk(&resultvals,ki(res));
+    K creds = ktn(KG, credSize);
+    if (credSize > 0)
+        memcpy(cred->G0, scred->bv_val, scred->bv_len);
+    jk(&resultvals,creds);
+
+    ber_bvfree(scred);
+    return xD(resultkeys,resultvals);;
 }
 
 K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
