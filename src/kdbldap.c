@@ -391,21 +391,23 @@ K kdbldap_get_option(K sess,K option)
     return get_option(session,option);
 }
 
-K kdbldap_bind(K sess,K dn, K cred)
+K kdbldap_bind(K sess, K dn, K cred, K mech)
 {
     CHECK_PARAM_STRING_TYPE(dn,"bind");
     CHECK_PARAM_STRING_TYPE(cred,"bind");
+    CHECK_PARAM_STRING_TYPE(mech,"bind");
     CHECK_PARAM_INT_TYPE(sess,"bind");
     int idx = getInt(sess);
     void* session = getSession(idx);
     char* dnStr = createString(dn);
     char* credStr = createString(cred);
+    char* mechStr = createString(mech);
     struct berval pass = { 0, NULL };
     ber_str2bv(credStr,0,0,&pass);
-    /* TODO other bind params */
-    int res = ldap_sasl_bind_s( session,dnStr,LDAP_SASL_SIMPLE,&pass,NULL,NULL,NULL);
+    int res = ldap_sasl_bind_s( session,dnStr,((mechStr[0]=='\0')?LDAP_SASL_SIMPLE:mechStr),&pass,NULL,NULL,NULL);
     free(dnStr);
     free(credStr);
+    free(mechStr);
     return ki(res);
 }
 
