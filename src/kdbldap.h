@@ -35,7 +35,7 @@ EXP K kdbldap_get_global_option(K option);
 EXP K kdbldap_get_option(K sess,K option);
 
 /* TODO */
-EXP K kdbldap_bind(K sess,K dn, K cred);
+EXP K kdbldap_bind(K sess, K dn, K cred, K mech);
 
 /* TODO */
 EXP K kdbldap_search(K sess, K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit);
