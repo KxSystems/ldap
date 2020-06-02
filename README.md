@@ -185,6 +185,11 @@ Where
 - cred is a string/symbol. LDAP credentials (e.g. password). Pass empty string/symbol when no password required for connection.
 - mech is a string/symbol. Pass an empty string to use the default LDAP_SASL_SIMPLE mechanism. Query the attribute 'supportedSASLMechanisms' from the  server's rootDSE for the list of SASL mechanisms the server supports.
 
+Returns a dict consisting of 
+
+- ReturnCode - integer TODO
+- Credentials - byte array which is the credentials returned by the server. Contents are empty for LDAP_SASL_SIMPLE, though for other SASL mechanisms, the credentials may need to be used with other security related functions (which may be external to LDAP). Reference documentation for your security mechanism.
+
 ### .ldap.search
 
 Search for partial or complete copies of entries based on a search criteria.
