@@ -11,4 +11,9 @@ search:`kdbldap 2:(`kdbldap_search;8)
 unbind:`kdbldap 2:(`kdbldap_unbind;1)
 err2string:`kdbldap 2:(`kdbldap_err2string;1)
 
+LDAP_SCOPE_BASE:0
+LDAP_SCOPE_ONELEVEL:1
+LDAP_SCOPE_SUBTREE:2
+LDAP_SCOPE_CHILDREN:3
+
 \d .
