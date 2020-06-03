@@ -1,5 +1,10 @@
-
+#ifdef _WIN32
+#include <windows.h>
+#include <winldap.h>
+#include <winber.h>
+#else
 #include <ldap.h>
+#endif
 #include "kdbldap.h"
 #include <stdio.h>
 #include <stdlib.h>
