@@ -14,18 +14,18 @@ message(STATUS "Build Tool : ${CMAKE_BUILD_TOOL}")
 message(STATUS "Solace API : $ENV{LDAP_API_DIR}")
 
 find_library(OPENLDAP_LIBRARY
-    NAMES ldap
-)
-
-find_library(LBER_LIBRARY
-    NAMES lber
+    NAMES ldap wldap32
 )
 
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    set(LINK_LIBS "${CMAKE_BINARY_DIR}/q.lib")
+    set(LINK_LIBS "${CMAKE_BINARY_DIR}/q.lib") 
+    set(LBER_LIBRARY "")
 else()
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-strict-aliasing")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-strict-aliasing")
+    find_library(LBER_LIBRARY
+        NAMES lber
+    )
 endif()
     
 add_library (${MY_LIBRARY_NAME} SHARED ${SRC_FILES})
