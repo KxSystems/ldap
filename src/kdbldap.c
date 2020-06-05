@@ -392,7 +392,7 @@ K kdbldap_get_option(K sess,K option)
     return get_option(session,option);
 }
 
-K kdbldap_bind(K sess, K dn, K cred, K mech)
+K kdbldap_bind_s(K sess, K dn, K cred, K mech)
 {
     CHECK_PARAM_STRING_TYPE(dn,"bind");
     CHECK_PARAM_STRING_TYPE(cred,"bind");
@@ -429,7 +429,7 @@ K kdbldap_bind(K sess, K dn, K cred, K mech)
     return xD(resultkeys,resultvals);;
 }
 
-K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
+K kdbldap_search_s(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
 {
     CHECK_PARAM_STRING_TYPE(baseDn,"search");
     CHECK_PARAM_INT_TYPE(scope,"search");
@@ -561,12 +561,12 @@ K kdbldap_search(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K tim
     return xD(resultkeys,resultvals);
 }
 
-K kdbldap_unbind(K sess)
+K kdbldap_unbind_s(K sess)
 {
     CHECK_PARAM_INT_TYPE(sess,"unbind");
     int idx = getInt(sess);
     void* session = getSession(idx);
-    int res = ldap_unbind_ext(session,NULL,NULL);
+    int res = ldap_unbind_ext_s(session,NULL,NULL);
     if (LDAP_SUCCESS == res)
         removeSession(idx);
     return ki(res);

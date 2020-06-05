@@ -35,13 +35,13 @@ EXP K kdbldap_get_global_option(K option);
 EXP K kdbldap_get_option(K sess,K option);
 
 /* TODO */
-EXP K kdbldap_bind(K sess, K dn, K cred, K mech);
+EXP K kdbldap_bind_s(K sess, K dn, K cred, K mech);
 
 /* TODO */
-EXP K kdbldap_search(K sess, K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit);
+EXP K kdbldap_search_s(K sess, K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit);
 
 /* TODO */
-EXP K kdbldap_unbind(K sess);
+EXP K kdbldap_unbind_s(K sess);
 
 EXP K kdbldap_err2string(K err);
 
