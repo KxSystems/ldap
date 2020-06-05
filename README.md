@@ -258,11 +258,11 @@ Gets options globally that affect LDAP operating procedures. Reference .ldap.get
 
 Syntax: `.ldap.getGlobalOption[option]`
 
-### .ldap.bind
+### .ldap.bind_s
 
-Bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. See [here](https://ldap.com/the-ldap-bind-operation/) for reference documentation
+Synchronous bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. See [here](https://ldap.com/the-ldap-bind-operation/) for reference documentation
 
-Syntax: `.ldap.bind[sess;dn;cred;mech]`
+Syntax: `.ldap.bind_s[sess;dn;cred;mech]`
 
 Where
 
@@ -276,11 +276,11 @@ Returns a dict consisting of
 - ReturnCode - integer TODO
 - Credentials - byte array which is the credentials returned by the server. Contents are empty for LDAP_SASL_SIMPLE, though for other SASL mechanisms, the credentials may need to be used with other security related functions (which may be external to LDAP). Reference documentation for your security mechanism.
 
-### .ldap.search
+### .ldap.search_s
 
-Search for partial or complete copies of entries based on a search criteria.
+Synchronous search for partial or complete copies of entries based on a search criteria.
 
-Syntax: .ldap.search[sess;baseDn;scope;filter;attrs;attrsOnly;timeLimit;sizeLimit]
+Syntax: .ldap.search_s[sess;baseDn;scope;filter;attrs;attrsOnly;timeLimit;sizeLimit]
 
 Where
 
@@ -303,15 +303,15 @@ Returns a dict consisting of
 - Entries - table consisting of DNs and Attributes. Attribute forms a dictionary, were each attribute may contain one or more values.
 - Referrals - list of strings providing the referrals that can be searched to gain access to the required info (if server supports referrals)
 
-### .ldap.unbind
+### .ldap.unbind_s
 
-Unbind from the directory, terminate the current association, and free resources.
+Synchronous unbind from the directory, terminate the current association, and free resources.
 
-Syntax: `.ldap.unbind[sess]`
+Syntax: `.ldap.unbind_s[sess]`
 
 Where 
 
-- sess is an int/long that represents the session previously created via .ldap.init. The number should not longer be used unless .ldap.init and .ldap.bind has been used to create a new session.
+- sess is an int/long that represents the session previously created via .ldap.init. The number should not longer be used unless .ldap.init and .ldap.bind_s has been used to create a new session.
 
 ### .ldap.err2string
 
