@@ -11,21 +11,30 @@ set_source_files_properties(${SRC_FILES} PROPERTIES LANGUAGE C)
 
 message(STATUS "Generator : ${CMAKE_GENERATOR}")
 message(STATUS "Build Tool : ${CMAKE_BUILD_TOOL}")
-message(STATUS "Solace API : $ENV{LDAP_API_DIR}")
+message(STATUS "Custom LDAP API location : $ENV{BUILD_HOME}")
+
+include_directories (
+    $ENV{BUILD_HOME}/include
+)
 
 find_library(OPENLDAP_LIBRARY
-    NAMES ldap wldap32
+    NAMES ldap libldap
+    HINTS "$ENV{BUILD_HOME}/lib/"
+)
+
+find_library(LBER_LIBRARY
+    NAMES lber liblber
+    HINTS "$ENV{BUILD_HOME}/lib/"
 )
 
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
+    set(INSTALL_SCRIPT "install.bat")
+    file(DOWNLOAD "https://github.com/KxSystems/kdb/raw/master/w64/q.lib" "${CMAKE_BINARY_DIR}/q.lib" )
     set(LINK_LIBS "${CMAKE_BINARY_DIR}/q.lib") 
-    set(LBER_LIBRARY "")
 else()
+    set(INSTALL_SCRIPT "install.sh")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-strict-aliasing")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-strict-aliasing")
-    find_library(LBER_LIBRARY
-        NAMES lber
-    )
 endif()
     
 add_library (${MY_LIBRARY_NAME} SHARED ${SRC_FILES})
@@ -35,10 +44,10 @@ IF(APPLE)
    set_target_properties(${MY_LIBRARY_NAME} PROPERTIES SUFFIX .so)
 endif()
 
-target_link_libraries(${MY_LIBRARY_NAME} ${LBER_LIBRARY} ${OPENLDAP_LIBRARY} ${LINK_LIBS})
+target_link_libraries(${MY_LIBRARY_NAME} ${OPENLDAP_LIBRARY} ${LBER_LIBRARY} ${LINK_LIBS})
 set_target_properties(${MY_LIBRARY_NAME} PROPERTIES PREFIX "")
 
-install(FILES README.md install.sh install.bat DESTINATION ${PROJECT_BINARY_DIR}/kdbldap/)
+install(FILES README.md ${INSTALL_SCRIPT} DESTINATION ${PROJECT_BINARY_DIR}/kdbldap/)
 install(DIRECTORY examples DESTINATION ${PROJECT_BINARY_DIR}/kdbldap)
-install(DIRECTORY script DESTINATION ${PROJECT_BINARY_DIR}/kdbldap)
+install(DIRECTORY q DESTINATION ${PROJECT_BINARY_DIR}/kdbldap)
 install(TARGETS ${MY_LIBRARY_NAME} DESTINATION ${PROJECT_BINARY_DIR}/kdbldap/lib OPTIONAL)
