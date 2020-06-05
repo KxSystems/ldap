@@ -1,4 +1,6 @@
 # LDAP interface for KDB+
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kxsystems/ldap?include_prereleases)](https://github.com/kxsystems/ldap/releases) [![Travis (.org) branch](https://img.shields.io/travis/kxsystems/ldap/master?label=travis%20build)](https://travis-ci.org/kxsystems/ldap/branches)
+
 ## Introduction
 
 TODO
@@ -13,9 +15,91 @@ Kdb+ is the world's fastest time-series database, optimized for ingesting, analy
 
 ## Running 
 
+### Download
+
+Download the latest release from our [releases page](https://github.com/KxSystems/ldap/releases)
+
+### Installation
+
+#### Linux
+
+TODO
+
+#### Windows
+
+TODO
+
+#### Mac
+
 TODO
 
 ## Building Interface From Source
+
+### Linux
+
+#### Linux OpenLdap Builds
+
+TODO
+
+#### Building Linux Interface
+
+TODO
+
+### Windows
+
+#### Windows OpenLdap Builds
+
+Pre-built OpenLdap Windows libraries can be retrieved using pacman package manager (supplied with msys2). The package is [mingw-w64-x86_64-openldap](https://packages.msys2.org/package/mingw-w64-x86_64-openldap). Example instruction for install
+
+```
+# update database of packages
+pacman -Fy
+# search for openldap package name
+pacman -Ss openldap
+# list contents of package prior to install
+pacman -Fl <x64 package name found in prev search>
+# install package
+pacman -S <x64 package name found in prev search>
+```
+
+##### Converting msys2 provided libldap.dll to libldap.lib for use with Visual Studio
+
+Use the provided dll2lib.bat to convert liblber.dll and libldap.dll (found in the mingw64/bin dir of your msys2 install).
+
+```
+dll2lib.bat liblber.dll
+dll2lib.bat libldap.dll
+```
+
+Move the resulting liblber.lib and libldap.lib to the mingw64/lib dir of your msys2 install.
+
+### Building Windows Interface
+
+##### Example build command using Visual Studio 2019
+
+Open 'x64 Native Tools Command Prompt for VS 2019' as supplied with Visual Studio.
+
+Go to the downloaded source & enter the build directory. Run the following builds commands
+
+```
+set BUILD_HOME=<dir containing lib and include directory of the openldap library>
+cmake -G "Visual Studio 16 2019" -A x64 ..
+MSBuild.exe INSTALL.vcxproj /m /nologo /verbosity:normal /p:Configuration=Release /p:Platform=x64
+```
+
+Created libs/etc can then be found in the newly created kdbldap dir
+
+### Mac
+
+#### Mac OpenLdap Builds
+
+TODO
+
+#### Building Mac Interface
+
+TODO
+
+## OpenLdap License
 
 TODO
 
