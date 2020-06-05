@@ -1,10 +1,7 @@
 #ifdef _WIN32
-#include <windows.h>
-#include <winldap.h>
-#include <winber.h>
-#else
-#include <ldap.h>
+#include <winsock2.h>
 #endif
+#include <ldap.h>
 #include "kdbldap.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +10,6 @@
 #define CHECK_PARAM_TYPE(x,y,z) {if (x->t != y) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_STRING_TYPE(x,z) {if (x->t != -KS && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_INT_TYPE(x,z) {if (x->t != -KI && x->t != -KJ) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
-
 static int getInt(K val)
 {
     if (val->t==-KI)
