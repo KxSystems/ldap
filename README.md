@@ -111,7 +111,7 @@ The OpenLDAP Public License  Version 2.8, 17 August 2003 Redistribution and use 
 
 TODO
 
-## Reference
+## Function Reference
 
 ### .ldap.init
 
@@ -273,7 +273,7 @@ Where
 
 Returns a dict consisting of 
 
-- ReturnCode - integer TODO
+- ReturnCode - integer. See error code reference  within this document.
 - Credentials - byte array which is the credentials returned by the server. Contents are empty for LDAP_SASL_SIMPLE, though for other SASL mechanisms, the credentials may need to be used with other security related functions (which may be external to LDAP). Reference documentation for your security mechanism.
 
 ### .ldap.search_s
@@ -299,7 +299,7 @@ Where
 
 Returns a dict consisting of 
 
-- ReturnCode - integer TODO
+- ReturnCode - integer. See error code reference within this document
 - Entries - table consisting of DNs and Attributes. Attribute forms a dictionary, were each attribute may contain one or more values.
 - Referrals - list of strings providing the referrals that can be searched to gain access to the required info (if server supports referrals)
 
@@ -321,4 +321,43 @@ Syntax: `.ldap.err2string[err]`
 
 Where 
 
-- err is an ldap error code
+- err is an ldap error code (see error code reference  within this document)
+
+## Error Code Reference
+
+The function .ldap.err2string call can provide a string representation of the error code.
+
+0 = Success
+
+### Protocol Codes
+
+-ve values
+
+Reference IANA registered result codes [here](https://www.iana.org/assignments/ldap-parameters/ldap-parameters.xhtml#ldap-parameters-6)
+
+### API Error Codes
+
++ve values
+
+| Code | Name                         | Details                                                      |
+| ---- | ---------------------------- | ------------------------------------------------------------ |
+| -1   | LDAP_SERVER_DOWN             | The LDAP library can't contact the LDAP server.              |
+| -2   | LDAP_LOCAL_ERROR             | Some local  error  occurred.   This  is  usually  a failed dynamic memory allocation. |
+| -3   | LDAP_ENCODING_ERROR          | An  error  was  encountered  encoding parameters to send to the LDAP server. |
+| -4   | LDAP_DECODING_ERROR          | An error was encountered decoding a result from the LDAP server. |
+| -5   | LDAP_TIMEOUT                 | A  timelimit  was  exceeded  while  waiting  for  a result.  |
+| -6   | LDAP_AUTH_UNKNOWN            | The authentication method specified to  ldap_bind()  is not known. |
+| -7   | LDAP_FILTER_ERROR            | An  invalid  filter  was  supplied to ldap_search() (e.g., unbalanced parentheses). |
+| -8   | LDAP_USER_CANCELLED          | Indicates the user cancelled the operation.                  |
+| -9   | LDAP_PARAM_ERROR             | An ldap routine was called with a bad parameter.             |
+| -10  | LDAP_NO_MEMORY               | An memory  allocation  (e.g.,  [malloc(3)](https://www.openldap.org/software/man.cgi?query=malloc&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)  or  other  dynamic  memory  allocator)  call failed in an ldap library routine. |
+| -11  | LDAP_CONNECT_ERROR           | Indicates a connection problem.                              |
+| -12  | LDAP_NOT_SUPPORTED           | Indicates the routine was called in  a  manner  not supported by the library. |
+| -13  | LDAP_CONTROL_NOT_FOUND       | Indicates  the  control  provided is unknown to the client library. |
+| -14  | LDAP_NO_RESULTS_RETURNED     | Indicates no results returned.                               |
+| -16  | LDAP_CLIENT_LOOP             | Indicates the library has detected a  loop  in  its processing. |
+| -17  | LDAP_REFERRAL_LIMIT_EXCEEDED | Indicates the referral limit has been exceeded.              |
+| -18  | LDAP_X_CONNECTING            |                                                              |
+
+
+
