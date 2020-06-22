@@ -3,8 +3,10 @@
 mkdir cbuild
 
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-  wget -q https://products.solace.com/download/C_API_OSX 
-  tar xvf C_API_OSX -C ./cbuild --strip-components=1
+  brew install openldap
+  mkdir cbuild
+  cp -r /usr/local/opt/openldap/lib ./cbuild/
+  cp -r /usr/local/opt/openldap/include ./cbuild/
 elif [ "$TRAVIS_OS_NAME" == "linux" ]; then
   wget -q https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.4.50.tgz 
   tar xvf openldap-2.4.50.tgz -C ./cbuild --strip-components=1
@@ -33,7 +35,6 @@ elif [ "$TRAVIS_OS_NAME" == "windows" ]; then
   ./dll2lib.bat C:/tools/msys64/mingw64/bin/liblber.dll
   ./dll2lib.bat C:/tools/msys64/mingw64/bin/libldap.dll
   echo "done lib file creation"
-  mkdir build
   cp -r /c/tools/msys64/mingw64/include ./cbuild/
   mkdir ./cbuild/lib
   cp /c/tools/msys64/mingw64/bin/*lib ./cbuild/lib/
