@@ -369,13 +369,11 @@ The function .ldap.err2string call can provide a string representation of the er
 
 ### Protocol Codes
 
--ve values
-
-Reference IANA registered result codes [here](https://www.iana.org/assignments/ldap-parameters/ldap-parameters.xhtml#ldap-parameters-6)
+These are all positive values. Reference IANA registered result codes [here](https://www.iana.org/assignments/ldap-parameters/ldap-parameters.xhtml#ldap-parameters-6)
 
 ### API Error Codes
 
-+ve values
+These are all negative values.
 
 | Code | Name                         | Details                                                      |
 | ---- | ---------------------------- | ------------------------------------------------------------ |
