@@ -39,11 +39,29 @@ TODO
 
 #### Linux OpenLdap Builds
 
-TODO
+The latest release of OpenLdap is referenced [here](https://www.openldap.org/software/release/)
+
+For example, the 2.4.50 release is available in source form from [here](https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.4.50.tgz )
+
+To build/install, unzip the downloaded source and run
+
+```
+./configure --disable-slapd --with-tls=openssl
+ make
+ make install
+```
 
 #### Building Linux Interface
 
-TODO
+After unstalling OpenLdap, to create a build within the build directory run the following:
+
+```
+cd build
+cmake ../
+make install
+```
+
+You should then find the resulting files in a newly created api dir, which should reside within the build directory.
 
 ### Windows
 
@@ -93,11 +111,31 @@ Created libs/etc can then be found in the newly created kdbldap dir
 
 #### Mac OpenLdap Builds
 
-TODO
+The [HomeBrew](https://brew.sh/) install manager provides a installation of OpenLdap. Once HomeBrew is available on your mac, run the following to install OpenLdap
+
+`brew install openldap`
 
 #### Building Mac Interface
 
-TODO
+Building the interface from source requires `gcc`, `gcc c++`, `make` and `cmake` packages installed on your development machine (e.g. xcode for Mac).
+
+Follow these steps
+
+1. Install OpenLdap (see above)
+2. Set an environment variable `BUILD_HOME` to the location on the installed OpenLdap
+3. Run `cmake`
+4. Run `make install`
+
+For example, on Linux/Mac, to create a build within the build directory
+
+```
+export BUILD_HOME=/usr/local/opt/openldap/
+cd build
+cmake ../
+make install
+```
+
+You should then find the resulting files in a newly created api dir, which should reside within the build directory.
 
 ## OpenLdap License
 
