@@ -9,6 +9,7 @@
 
 #define CHECK_PARAM_TYPE(x,y,z) {if (x->t != y) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_STRING_TYPE(x,z) {if (x->t != -KS && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
+#define CHECK_PARAM_BYTESTRING_TYPE(x,z) {if (x->t != -KS && x->t != KG && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_INT_TYPE(x,z) {if (x->t != -KI && x->t != -KJ) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 static int getInt(K val)
 {
@@ -21,7 +22,7 @@ static char* createString(K in)
 {
     char* newStr = NULL;
     int len = 1;
-    if (in->t == KC)
+    if (in->t == KC || in->t == KG)
     {
         len = (in->n) + 1;
         newStr = (char*)malloc(len);
@@ -37,6 +38,15 @@ static char* createString(K in)
         newStr = (char*)malloc(len);
     newStr[len-1]='\0';
     return newStr;
+}
+
+static int getStringLen(K in)
+{
+    if (in->t == KC || in->t == KG)
+        return in->n;
+    else if (in->t == -KS)
+        return strlen(in->s);
+    return 0;
 }
 
 K kdbldap_init(K sess, K uris)
@@ -395,7 +405,7 @@ K kdbldap_get_option(K sess,K option)
 K kdbldap_bind_s(K sess, K dn, K cred, K mech)
 {
     CHECK_PARAM_STRING_TYPE(dn,"bind");
-    CHECK_PARAM_STRING_TYPE(cred,"bind");
+    CHECK_PARAM_BYTESTRING_TYPE(cred,"bind");
     CHECK_PARAM_STRING_TYPE(mech,"bind");
     CHECK_PARAM_INT_TYPE(sess,"bind");
     int idx = getInt(sess);
@@ -405,7 +415,7 @@ K kdbldap_bind_s(K sess, K dn, K cred, K mech)
     char* mechStr = createString(mech);
     struct berval* scred = NULL;
     struct berval pass = { 0, NULL };
-    ber_str2bv(credStr,0,0,&pass);
+    ber_str2bv(credStr,getStringLen(cred),0,&pass);
     int res = ldap_sasl_bind_s( session,dnStr,((mechStr[0]=='\0')?LDAP_SASL_SIMPLE:mechStr),&pass,NULL,NULL,&scred);
     free(dnStr);
     free(credStr);
