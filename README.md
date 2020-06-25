@@ -27,15 +27,42 @@ Download the latest release from our [releases page](https://github.com/KxSystem
 
 #### Linux
 
-TODO
+Prior to using this interface, the openldap library package should be installed (e.g. redhat releases may include openldap package by default), which includes libldap.so. The latest openldap can also be build & installed from source, by obtaining the latest release from [here](https://openldap.org/).
+
+To install this kdb ldap library and scripts, either
+
+- run the provided install.sh
+
+or
+
+- copy `kdbldap.so` which was built or downloaded earlier to your kdb+ folder. If on a Linux 64bit machine with kdb+ installed in `/usr/local/q`, place the shared library into `/usr/local/q/l64/`.
+- the q script to load the solace API (`ldap.q`) can be placed in the current working directory or within the kdb+ install directory.
 
 #### Windows
 
-TODO
+TODO - openldap install
+
+To install the library and scripts, either
+
+- run the provided install.bat
+
+or
+
+- copy `kdbldap.dll` which was built or downloaded earlier, to your kdb+ install binary dir e.g. if kdb+ installed at `C:\q`, place the shared library into `C:\q\w64\`.
+- copy the q script to load the solace API (`ldap.q`) can be placed in the current working directory or within the kdb+ install directory.
 
 #### Mac
 
-TODO
+TODO - openldap install
+
+To install the library and scripts, either
+
+- run the provided install.sh
+
+or
+
+- Copy `kdbldap.so` which was built or downloaded earlier, to your kdb+ install binary dir e.g. if kdb+ installed at `/usr/local/q`, place the shared library into `/usr/local/q/m64/`..
+- The q script to load the solace API (`ldap.q`) can be placed in the current working directory or within the kdb+ install directory.
 
 ## Building Interface From Source
 
