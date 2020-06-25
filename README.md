@@ -151,7 +151,13 @@ The OpenLDAP Public License  Version 2.8, 17 August 2003 Redistribution and use 
 
 ## Overview
 
-TODO
+[kxsystems/ldap](https://github.com/KxSystems/ldap)
+
+LDAP is a vendor neutral protocol to gain interaction with directory services. The open protocol that client/servers should implement is detailed on [RFC 4511](https://docs.ldap.com/specs/rfc4511.txt).
+
+The protocol is often used by organizations for centralized authentication and storage of their resources such as users, groups, services, applications, etc. For example, a client application can find if a user is a member of a particular group to allow access to their service.
+
+The KDB+ interface for LDAP uses [OpenLDAP](https://openldap.org/), which has client libraries and server implementations.  Not all server vendors may provide the same set of features, so this API aims to be vendor neutral to gain maximum flexibility.
 
 ## Function Reference
 
