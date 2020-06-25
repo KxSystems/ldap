@@ -3,15 +3,19 @@
 
 ## Introduction
 
-TODO
+This interface allows KDB+ to interact with the Lightweight Directory Access Protocol (LDAP). This API permits a client to authenticate & search against an LDAP server. The interface is a thin wrapper against the open source OpenLDAP library. General info on this API is available [here](https://www.openldap.org/software/man.cgi?query=ldap&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release).
 
 ## Documentation
 
 Documentation outlining the functionality available for this interface can be found [here](https://code.kx.com/q/interfaces/ldap). (*URL NOT CURRENT OPERATIONAL - SEE CODE.KX.COM SECTION BELOW*)
 
-## New to kdb+ ?
+## New to KDB+ ?
 
 Kdb+ is the world's fastest time-series database, optimized for ingesting, analyzing and storing massive amounts of structured data. To get started with kdb+, please visit https://code.kx.com/q/learn/ for downloads and developer information. For general information, visit https://kx.com/
+
+## New to LDAP?
+
+General information is available [here](https://ldap.com/). 
 
 ## Running 
 
