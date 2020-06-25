@@ -306,13 +306,21 @@ Where
 
 - sess is an int/long that represents the session previously created via .ldap.init
 - dn is a string/symbol. The DN of the user to authenticate. This should be empty for anonymous simple authentication, and is typically empty for SASL authentication because most SASL mechanisms identify the target account in the encoded credentials. It must be non-empty for non-anonymous simple authentication.
-- cred is a string/symbol. LDAP credentials (e.g. password). Pass empty string/symbol when no password required for connection.
+- cred is a char/byte array or symbol. LDAP credentials (e.g. password). Pass empty string/symbol when no password required for connection.
 - mech is a string/symbol. Pass an empty string to use the default LDAP_SASL_SIMPLE mechanism. Query the attribute 'supportedSASLMechanisms' from the  server's rootDSE for the list of SASL mechanisms the server supports.
 
 Returns a dict consisting of 
 
 - ReturnCode - integer. See error code reference  within this document.
 - Credentials - byte array which is the credentials returned by the server. Contents are empty for LDAP_SASL_SIMPLE, though for other SASL mechanisms, the credentials may need to be used with other security related functions (which may be external to LDAP). Reference documentation for your security mechanism.
+
+#### Using Security Mechanisms
+
+LDAP supports a range of security mechanisms as part of the bind call. Check with your LDAP server/admin what is supported (often found in the root attribute named 'supportedSASLMechanisms').
+
+Most of the security mechanisms are performed externally, in separate code related to your security mechanism.
+
+For example,  DIGEST_MD5 is initially performed by calling bind with no credentials, mech set to "DIGEST-MD5" & capturing the returned credential values from the server. Using the returned credentials to MD5 encode the user details, a second bind call is then made with the MD5 encoded details as the 'cred' parameter. This requires an additional MD5 library that is outside the scope of this interface (Ref: [example code)](https://github.com/zheolong/melody-lib/blob/master/libldap5/sources/ldap/common/digest_md5.c). Other security mechanisms may operate in a similar manner (e.g. [GSSAPI](https://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface) example [here](https://github.com/hajuuk/R7000/blob/master/ap/gpl/samba-3.0.13/source/libads/sasl.c), [CRAM-MD5](https://en.wikipedia.org/wiki/CRAM-MD5) available [here](https://github.com/illumos/illumos-gate/blob/master/usr/src/lib/libldap5/sources/ldap/common/cram_md5.c)).
 
 ### .ldap.search_s
 
@@ -394,6 +402,5 @@ These are all negative values.
 | -16  | LDAP_CLIENT_LOOP             | Indicates the library has detected a  loop  in  its processing. |
 | -17  | LDAP_REFERRAL_LIMIT_EXCEEDED | Indicates the referral limit has been exceeded.              |
 | -18  | LDAP_X_CONNECTING            |                                                              |
-
 
 
