@@ -292,7 +292,7 @@ static K get_option(LDAP* ld,K option)
            ext = ktn(KS,i);
            for(i=0; info.ldapai_extensions[i] != NULL; i++)
            {
-                kS(ext)[0]=ss(info.ldapai_extensions[i]);
+                kS(ext)[i]=ss(info.ldapai_extensions[i]);
                 ldap_memfree(info.ldapai_extensions[i]);
            }
            ldap_memfree(info.ldapai_extensions);
