@@ -11,6 +11,7 @@
 #define CHECK_PARAM_STRING_TYPE(x,z) {if (x->t != -KS && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_BYTESTRING_TYPE(x,z) {if (x->t != -KS && x->t != KG && x->t != KC) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
 #define CHECK_PARAM_INT_TYPE(x,z) {if (x->t != -KI && x->t != -KJ) return krr((S)"Function " #z " called with incorrect param type for " #x "");}
+#define CHECK_SESSION(x) {if (0==x) return krr((S)"unknown session used");}
 static int getInt(K val)
 {
     if (val->t==-KI)
@@ -195,6 +196,7 @@ K kdbldap_set_option(K sess,K option,K value)
     CHECK_PARAM_INT_TYPE(sess,"set_option");
     int idx = getInt(sess);
     void* session = getSession(idx);
+    CHECK_SESSION(session);
     return set_option(session,option,value);
 }
 
@@ -399,6 +401,7 @@ K kdbldap_get_option(K sess,K option)
     CHECK_PARAM_INT_TYPE(sess,"get_option");
     int idx = getInt(sess);
     void* session = getSession(idx);
+    CHECK_SESSION(session);
     return get_option(session,option);
 }
 
@@ -410,6 +413,7 @@ K kdbldap_bind_s(K sess, K dn, K cred, K mech)
     CHECK_PARAM_INT_TYPE(sess,"bind");
     int idx = getInt(sess);
     void* session = getSession(idx);
+    CHECK_SESSION(session);
     char* dnStr = createString(dn);
     char* credStr = createString(cred);
     char* mechStr = createString(mech);
@@ -451,6 +455,7 @@ K kdbldap_search_s(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K t
     CHECK_PARAM_INT_TYPE(sess,"search");
     int idx = getInt(sess);
     void* session = getSession(idx);
+    CHECK_SESSION(session);
     char* baseStr = createString(baseDn);
     char* filterStr = createString(filter);
     int scopeInt = getInt(scope);
@@ -576,6 +581,7 @@ K kdbldap_unbind_s(K sess)
     CHECK_PARAM_INT_TYPE(sess,"unbind");
     int idx = getInt(sess);
     void* session = getSession(idx);
+    CHECK_SESSION(session);
     int res = ldap_unbind_ext_s(session,NULL,NULL);
     if (LDAP_SUCCESS == res)
         removeSession(idx);
