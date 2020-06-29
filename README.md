@@ -260,7 +260,7 @@ Supported TLS options
 
 ### .ldap.setGlobalOption
 
-Sets options globally that affect LDAP operating procedures. Reference .ldap.setOption for params & details.
+Sets options globally that affect LDAP operating procedures. LDAP handles inherit their default settings from the global options in       effect at the time the handle is created. Reference .ldap.setOption for params & details.
 
 Syntax: `.ldap.setGlobalOption[option;value]`
 
