@@ -190,7 +190,7 @@ The KDB+ interface for LDAP uses [OpenLDAP](https://openldap.org/), which has cl
 
 ### .ldap.init
 
-Initializes the session with LDAP server connection details. Connection will occur on first operation. Does not create a connection. Reference [ldap_initialize](https://www.openldap.org/software/man.cgi?query=ldap_init&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
+Initializes the session with LDAP server connection details. Connection will occur on first operation. Does not create a connection. Use unbind to free the session. Reference [ldap_initialize](https://www.openldap.org/software/man.cgi?query=ldap_init&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release)
 
 Syntax: `.ldap.init[sess;uris]`
 
@@ -260,7 +260,7 @@ Supported TLS options
 
 ### .ldap.setGlobalOption
 
-Sets options globally that affect LDAP operating procedures. LDAP handles inherit their default settings from the global options in       effect at the time the handle is created. Reference .ldap.setOption for params & details.
+Sets options globally that affect LDAP operating procedures. LDAP handles inherit their default settings from the global options in       effect at the time the handle is created (i.e. if a global setting is made, all sessions initialized after that will inherit those settings but not any sessions created prior). Reference .ldap.setOption for params & details.
 
 Syntax: `.ldap.setGlobalOption[option;value]`
 
@@ -388,7 +388,7 @@ Returns a dict consisting of
 
 ### .ldap.unbind_s
 
-Synchronous unbind from the directory, terminate the current association, and free resources.
+Synchronous unbind from the directory, terminate the current association, and free resources. Should be called even if a session did not bind (or failed to bind), but initialized its session.
 
 Syntax: `.ldap.unbind_s[sess]`
 
