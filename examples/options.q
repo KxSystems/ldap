@@ -10,7 +10,7 @@ timeout:3000000
 .ldap.setGlobalOption[`LDAP_OPT_NETWORK_TIMEOUT;timeout]
 
 -1"### Configuring LDAP server to use";
-.ldap.init[mainSession;enlist `$"ldap://host.docker.internal:389"]
+.ldap.init[mainSession;enlist `$"ldap://host.docker.internal:3890"]
 
 -1"### TLS Require Cert ";string .ldap.getOption[mainSession;`LDAP_OPT_X_TLS_REQUIRE_CERT]
 -1"### Protocol version ";string .ldap.getOption[mainSession;`LDAP_OPT_PROTOCOL_VERSION]
@@ -19,6 +19,6 @@ timeout:3000000
 -1"### Connecting and searching for base attributes using anon bind";
 res:.ldap.search_s[mainSession;`$"";.ldap.LDAP_SCOPE_BASE;`$"(objectClass=*)";`$();0;0;0]
 
-if[0i<>res`ReturnCode;-2"### Request failed with code: ",string res`ReturnCode;exit 1;]
+if[0i<>res`ReturnCode;-2"### Request failed with : ",.ldap.err2string[res`ReturnCode];exit 1;]
 
 show res
