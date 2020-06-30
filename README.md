@@ -53,7 +53,9 @@ or
 
 #### Mac
 
-TODO - openldap install
+The [HomeBrew](https://brew.sh/) install manager provides a installation of OpenLdap. Once HomeBrew is available on your mac, run the following to install OpenLdap
+
+`brew install openldap`
 
 To install the library and scripts, either
 
