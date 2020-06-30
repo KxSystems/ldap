@@ -27,3 +27,5 @@ show res2
 
 -1"### UnBind from session";
 .ldap.unbind_s[globalSession]
+
+exit 0
