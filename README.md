@@ -40,20 +40,26 @@ or
 
 #### Windows
 
-TODO - openldap install
+You can build OpenLdap from [source](https://openldap.org/software/download/), or use a package manager such as pacman thats provided with [msys64](https://www.msys2.org/). The OpenLdap libs be moved from your install  (e.g. if using mssys and pacman, these libs may be found in the mingw64\bin directory) to the KDB+ w64 directory. The OpenLdap libs required are:
 
-To install the library and scripts, either
+- libcrypto-1_1-x64.dll
+- liblber.dll
+- libldap.dll
+- libsasl2-3.dll
+- libssl-1_1-x64.dll
+
+To install the library and scripts interface that this repo provides, either
 
 - run the provided install.bat
 
 or
 
-- copy `kdbldap.dll` which was built or downloaded earlier, to your kdb+ install binary dir e.g. if kdb+ installed at `C:\q`, place the shared library into `C:\q\w64\`.
+- copy `kdbldap.dll` which was built or downloaded earlier, to your kdb+ install binary dir e.g. if KDB+ installed at `C:\q`, place the shared library into `C:\q\w64\`.
 - copy the q script to load the solace API (`ldap.q`) can be placed in the current working directory or within the kdb+ install directory.
 
-#### Mac
+#### Mac (Intel)
 
-The [HomeBrew](https://brew.sh/) install manager provides a installation of OpenLdap. Once HomeBrew is available on your mac, run the following to install OpenLdap
+You can build OpenLdap from [source](https://openldap.org/software/download/), or use a package manager such as homebrew. The [HomeBrew](https://brew.sh/) package manager provides a installation of OpenLdap. Once HomeBrew is available on your mac, run the following to install OpenLdap
 
 `brew install openldap`
 
