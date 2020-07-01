@@ -235,7 +235,7 @@ static K getTimevalOption(LDAP* ld, int option)
     if (timeVal==NULL)
         return ki(0);
     res = (timeVal->tv_sec * 1000000) + timeVal->tv_usec;
-    free(timeVal);
+    ldap_memfree(timeVal);
     return ki(res);
 }
 
