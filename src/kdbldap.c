@@ -129,7 +129,13 @@ static K set_option(LDAP* ld, K option,K value)
     if (strcmp(option->s,"LDAP_OPT_PROTOCOL_VERSION")==0)
         return setIntOption(ld,LDAP_OPT_PROTOCOL_VERSION,value);
     if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
-        return setIntOption(ld,LDAP_OPT_REFERRALS,value);
+    {
+        CHECK_PARAM_INT_TYPE(value,"set_option");
+        int val = getInt(value);
+        if (val==0)
+            return ki(ldap_set_option(ld, LDAP_OPT_REFERRALS, LDAP_OPT_OFF));
+        return ki(ldap_set_option(ld, LDAP_OPT_REFERRALS, LDAP_OPT_ON));
+    }
     if (strcmp(option->s,"LDAP_OPT_RESULT_CODE")==0)
         return setIntOption(ld,LDAP_OPT_RESULT_CODE,value);
     if (strcmp(option->s,"LDAP_OPT_SIZELIMIT")==0)
