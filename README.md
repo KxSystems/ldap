@@ -5,6 +5,12 @@
 
 This interface allows KDB+ to interact with the Lightweight Directory Access Protocol (LDAP). This API permits a client to authenticate & search against an LDAP server. The interface is a thin wrapper against the open source OpenLDAP library. General info on this API is available [here](https://www.openldap.org/software/man.cgi?query=ldap&sektion=3&apropos=0&manpath=OpenLDAP+2.4-Release).
 
+In addition to authentication/authorization uses, depending on the data stored on your LDAP server, it could be used to access data for analytics e.g.
+
+- company staff turnover (if user creation date/leave dates/etc recorded)
+- IT equipment approaching end of life (if hardware details recorded)
+- staff departmental memberships
+
 ## Documentation
 
 Documentation outlining the functionality available for this interface can be found [here](https://code.kx.com/q/interfaces/ldap). (*URL NOT CURRENT OPERATIONAL - SEE CODE.KX.COM SECTION BELOW*)
