@@ -12,14 +12,13 @@ unbind_s:`kdbldap 2:(`kdbldap_unbind_s;1)
 err2string:`kdbldap 2:(`kdbldap_err2string;1)
 
 bind:{[sess;baseDN;cred;mech]
-  {if[x~(::);x set `}each `baseDN`cred`mech;
-  bind_s[sess;dn;cred;mech]
+  if[baseDN~(::);baseDN:`];if[cred~(::);cred:`];if[mech~(::);mech:`];
+  bind_s[sess;baseDN;cred;mech]
   }
 
-search:{[sess;baseDN;scope;filter;attr;attrsOnly;timeLimit;sizeLimit]
-  if[baseDN~(::);baseDN:`];
-  if[filter~(::);filter:`$()];
-  search_s[sess;baseDN;scope;filter;attr;attrsOnly;timeLimit;sizeLimit]
+search:{[sess;baseDN;scope;filter;attrib;attrsOnly;timeLimit;sizeLimit]
+  if[baseDN~(::);baseDN:`];if[filter~(::);filter:`$()];if[attrib~(::);attrib:`$()];
+  search_s[sess;baseDN;scope;filter;attrib;attrsOnly;timeLimit;sizeLimit]
   }
 
 unbind:unbind_s
