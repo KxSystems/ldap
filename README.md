@@ -341,18 +341,18 @@ Gets options globally that affect LDAP operating procedures. Reference .ldap.get
 
 Syntax: `.ldap.getGlobalOption[option]`
 
-### .ldap.bind_s
+### .ldap.bind
 
 Synchronous bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. See [here](https://ldap.com/the-ldap-bind-operation/) for reference documentation
 
-Syntax: `.ldap.bind_s[sess;dn;cred;mech]`
+Syntax: `.ldap.bind[sess;dn;cred;mech]`
 
 Where
 
 - sess is an int/long that represents the session previously created via .ldap.init
-- dn is a string/symbol. The DN of the user to authenticate. This should be empty for anonymous simple authentication, and is typically empty for SASL authentication because most SASL mechanisms identify the target account in the encoded credentials. It must be non-empty for non-anonymous simple authentication.
-- cred is a char/byte array or symbol. LDAP credentials (e.g. password). Pass empty string/symbol when no password required for connection.
-- mech is a string/symbol. Pass an empty string to use the default LDAP_SASL_SIMPLE mechanism. Query the attribute 'supportedSASLMechanisms' from the  server's rootDSE for the list of SASL mechanisms the server supports.
+- dn is a string/symbol. The DN of the user to authenticate. This should be an empty string/symbol or generic null for anonymous simple authentication, and is typically empty for SASL authentication because most SASL mechanisms identify the target account in the encoded credentials. It must be non-empty for non-anonymous simple authentication.
+- cred is a char/byte array or symbol. LDAP credentials (e.g. password). Pass empty string/symbol or generic null when no password required for connection.
+- mech is a string/symbol. Pass an empty string or generic null to use the default LDAP_SASL_SIMPLE mechanism. Query the attribute 'supportedSASLMechanisms' from the  server's rootDSE for the list of SASL mechanisms the server supports.
 
 Returns a dict consisting of 
 
@@ -367,7 +367,7 @@ Most of the security mechanisms are performed externally, in separate code relat
 
 For example,  DIGEST_MD5 is initially performed by calling bind with no credentials, mech set to "DIGEST-MD5" & capturing the returned credential values from the server. Using the returned credentials to MD5 encode the user details, a second bind call is then made with the MD5 encoded details as the 'cred' parameter. This requires an additional MD5 library that is outside the scope of this interface (Ref: [example code)](https://github.com/zheolong/melody-lib/blob/master/libldap5/sources/ldap/common/digest_md5.c). Other security mechanisms may operate in a similar manner (e.g. [GSSAPI](https://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface) example [here](https://github.com/hajuuk/R7000/blob/master/ap/gpl/samba-3.0.13/source/libads/sasl.c), [CRAM-MD5](https://en.wikipedia.org/wiki/CRAM-MD5) available [here](https://github.com/illumos/illumos-gate/blob/master/usr/src/lib/libldap5/sources/ldap/common/cram_md5.c)).
 
-### .ldap.search_s
+### .ldap.search
 
 Synchronous search for partial or complete copies of entries based on a search criteria.
 
@@ -376,14 +376,14 @@ Syntax: .ldap.search_s[sess;baseDn;scope;filter;attrs;attrsOnly;timeLimit;sizeLi
 Where
 
 - sess is an int/long that represents the session previously created via .ldap.init
-- baseDn is a string/symbol. The base of the subtree to search from. An empty string/symbol can be used to search from the root (or when a DN is not known).
+- baseDn is a string/symbol. The base of the subtree to search from. An empty string/symbol or generic null can be used to search from the root (or when a DN is not known).
 - scope  is an int/long. Can be set to one of the following values:
   - 0 (LDAP_SCOPE_BASE) Only the entry specified will be considered in the search & no subordinates used
   - 1 (LDAP_SCOPE_ONELEVEL) Only search the immediate children of entry specified. Will not use the entry specified or further subordinates from the children.
   - 2 (LDAP_SCOPE_SUBTREE) To search the entry and all subordinates
   - 3 (LDAP_SCOPE_CHILDREN) To search all of the subordinates
 - filter is a string/symbol. The filter to be applied to the search ([reference](https://ldap.com/ldap-filters/))
-- attrs is a symbol list. The set of attributes to include in the result. If a specific set of attribute descriptions are listed, then only those attributes should be included in matching entries. The special value “*” indicates that all user attributes should be included in matching entries. The special value “+” indicates that all operational attributes should be included in matching entries. The special value “1.1” indicates that no attributes should be included in matching entries. Some servers may also support the ability to use the “@” symbol followed by an object class name (e.g., “@inetOrgPerson”) to request all attributes associated with that object class. If the set of attributes to request is empty, then the server should behave as if the value “*” was specified to request that all user attributes be included in entries that are returned.
+- attrs is a symbol list. The set of attributes to include in the result. If a specific set of attribute descriptions are listed, then only those attributes should be included in matching entries. The special value “*” indicates that all user attributes should be included in matching entries. The special value “+” indicates that all operational attributes should be included in matching entries. The special value “1.1” indicates that no attributes should be included in matching entries. Some servers may also support the ability to use the “@” symbol followed by an object class name (e.g., “@inetOrgPerson”) to request all attributes associated with that object class. If the set of attributes to request is an empty symbol/string or generic null, then the server should behave as if the value “*” was specified to request that all user attributes be included in entries that are returned.
 - attrsOnly is an int/long. Should be set to a non-zero value if only attribute descriptions are wanted. It should be set to zero (0) if both attributes descriptions and attribute values are wanted.
 - timeLimit is an int/long. Max number of microseconds to wait for a result. 0 represents no limit. Note that the server may impose its own limit.
 - sizeLimit is an int/long. Max number of entries to use in the result. 0 represents no limit. Note that the server may impose its own limit.
@@ -394,15 +394,15 @@ Returns a dict consisting of
 - Entries - table consisting of DNs and Attributes. Attribute forms a dictionary, were each attribute may contain one or more values.
 - Referrals - list of strings providing the referrals that can be searched to gain access to the required info (if server supports referrals)
 
-### .ldap.unbind_s
+### .ldap.unbind
 
 Synchronous unbind from the directory, terminate the current association, and free resources. Should be called even if a session did not bind (or failed to bind), but initialized its session.
 
-Syntax: `.ldap.unbind_s[sess]`
+Syntax: `.ldap.unbind[sess]`
 
 Where 
 
-- sess is an int/long that represents the session previously created via .ldap.init. The number should not longer be used unless .ldap.init and .ldap.bind_s has been used to create a new session.
+- sess is an int/long that represents the session previously created via .ldap.init. The number should no longer be used unless .ldap.init and .ldap.bind_s has been used to create a new session.
 
 ### .ldap.err2string
 

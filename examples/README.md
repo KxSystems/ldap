@@ -18,9 +18,13 @@ Queries the servers rootDSE. Depending on the functionality your server supports
 
 The connection details within the script may need altered to communicate with your LDAP server.
 
-Example 
+*Example:*
 
+Kx docker image:
 `q root_dse.q`
+
+Local instance
+`q root_dse.q -host 0.0.0.0
 
 ### search.q
 
@@ -28,4 +32,8 @@ Created to show an example of an ldap search that works with the example LDAP se
 
 Example
 
-`q search.q`
+Kx docker image:
+`q search.q` 
+
+Local instance
+`q search.q -host 0.0.0.0
