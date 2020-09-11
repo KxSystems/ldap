@@ -24,16 +24,16 @@ Kx docker image:
 `q root_dse.q`
 
 Local instance
-`q root_dse.q -host 0.0.0.0
+`q root_dse.q -host 0.0.0.0`
 
 ### search.q
 
 Created to show an example of an ldap search that works with the example LDAP server available from [https://github.com/rroemhild/docker-test-openldapi](https://github.com/rroemhild/docker-test-openldapi). Example searches provided in the script, such as searching for a users email. NOTE: this example server does not require a bind with user dn/password.
 
-Example
+*Example:*
 
 Kx docker image:
 `q search.q` 
 
 Local instance
-`q search.q -host 0.0.0.0
+`q search.q -host 0.0.0.0`
