@@ -20,11 +20,9 @@ The connection details within the script may need altered to communicate with yo
 
 *Example:*
 
-Kx docker image:
-`q root_dse.q`
+Kx docker image: `q root_dse.q`
 
-Local instance
-`q root_dse.q -host 0.0.0.0`
+Local instance: `q root_dse.q -host 0.0.0.0`
 
 ### search.q
 
@@ -32,8 +30,6 @@ Created to show an example of an ldap search that works with the example LDAP se
 
 *Example:*
 
-Kx docker image:
-`q search.q` 
+Kx docker image: `q search.q` 
 
-Local instance
-`q search.q -host 0.0.0.0`
+Local instance: `q search.q -host 0.0.0.0`
