@@ -446,6 +446,6 @@ These are all negative values.
 | -14  | LDAP_NO_RESULTS_RETURNED     | Indicates no results returned.                               |
 | -16  | LDAP_CLIENT_LOOP             | Indicates the library has detected a  loop  in  its processing. |
 | -17  | LDAP_REFERRAL_LIMIT_EXCEEDED | Indicates the referral limit has been exceeded.              |
-| -18  | LDAP_X_CONNECTING            |                                                              |
+| -18  | LDAP_X_CONNECTING            | Indicates async connect attempt is ongoing.                  |
 
 
