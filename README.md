@@ -125,6 +125,8 @@ pacman -S <x64 package name found in prev search>
 
 Use the provided dll2lib.bat to convert liblber.dll and libldap.dll (found in the mingw64/bin dir of your msys2 install).
 
+The batch file dll2lib.bat should be run from a VS command prompt in order to use tools from Visual Studio.
+
 ```
 dll2lib.bat liblber.dll
 dll2lib.bat libldap.dll
