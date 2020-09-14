@@ -486,8 +486,8 @@ K kdbldap_search_s(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K t
               ((filterStr[0]=='\0')?NULL:filterStr),
               attrsArr, /* char* attrs[] */
               attrsOnlyInt, /* 0 = attribute values and descriptions, otherwise just descriptions */
-              NULL, /* TODO LDAPControl **serverctrls. NULL for no serverctrls */
-              NULL, /* TODO LDAPControl **clientctrls. NULL for no clientctrls */
+              NULL, /* LDAPControl **serverctrls. NULL for no serverctrls. Not currently used */
+              NULL, /* LDAPControl **clientctrls. NULL for no clientctrls. Not currently used */
               (maxTime>0?(&timeout):NULL), /* struct timeval *timeout. NULL is not time limit */
               maxSize,  /* 0 is LDAP_NO_LIMIT */
               &msg);
