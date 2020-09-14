@@ -26,7 +26,7 @@ protocolVersion:.ldap.setOption[globalSession;`LDAP_OPT_PROTOCOL_VERSION;3]
 $[0i~protocolVersion;
   [-1"'Request to locally set 'LDAP_OPT_PROTOCOL_VERSION' option successfully processed'";];
   [-2"'Request to locally set 'LDAP_OPT_PROTOCOL_VERSION' option failed with return: '",
-     .ldap.err2string[anonSearch`ReturnCode],"'. Exiting.\n";
+     .ldap.err2string[protocolVersion],"'. Exiting.\n";
    exit 1]
   ]
 show .ldap.getOption[globalSession;`LDAP_OPT_API_INFO]
@@ -77,7 +77,7 @@ unBindSession:.ldap.unbind[globalSession]
 $[0i~unBindSession;
   [-1"'Request to unbind from the session successfully processed'.\n";];
   [-1"Request to unbind from session failed with return: '",
-     unBindSession,"'. Exiting.\n";
+     .ldap.err2string[unBindSession],"'. Exiting.\n";
    exit 1]
   ]
 
