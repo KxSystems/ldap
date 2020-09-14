@@ -1,4 +1,4 @@
-# kdb+ interface for Solace (Examples)
+# kdb+ interface for LDAP (Examples)
 
 ## Installation
 
