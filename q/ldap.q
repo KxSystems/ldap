@@ -11,6 +11,19 @@ search_s:`kdbldap 2:(`kdbldap_search_s;8)
 unbind_s:`kdbldap 2:(`kdbldap_unbind_s;1)
 err2string:`kdbldap 2:(`kdbldap_err2string;1)
 
+bind:{[sess;baseDN;cred;mech]
+  if[baseDN~(::);baseDN:`];if[cred~(::);cred:`];if[mech~(::);mech:`];
+  bind_s[sess;baseDN;cred;mech]
+  }
+
+search:{[sess;baseDN;scope;filter;attrib;attrsOnly;timeLimit;sizeLimit]
+  if[baseDN~(::);baseDN:`];if[filter~(::);filter:`$()];if[attrib~(::);attrib:`$()];
+  search_s[sess;baseDN;scope;filter;attrib;attrsOnly;timeLimit;sizeLimit]
+  }
+
+unbind:unbind_s
+
+
 LDAP_SCOPE_BASE:0
 LDAP_SCOPE_ONELEVEL:1
 LDAP_SCOPE_SUBTREE:2

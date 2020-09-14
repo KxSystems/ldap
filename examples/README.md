@@ -1,4 +1,4 @@
-# kdb+ interface for Solace (Examples)
+# kdb+ interface for LDAP (Examples)
 
 ## Installation
 
@@ -18,14 +18,18 @@ Queries the servers rootDSE. Depending on the functionality your server supports
 
 The connection details within the script may need altered to communicate with your LDAP server.
 
-Example 
+*Example:*
 
-`q root_dse.q`
+Kx docker image: `q root_dse.q`
+
+Local instance: `q root_dse.q -host 0.0.0.0`
 
 ### search.q
 
 Created to show an example of an ldap search that works with the example LDAP server available from [https://github.com/rroemhild/docker-test-openldapi](https://github.com/rroemhild/docker-test-openldapi). Example searches provided in the script, such as searching for a users email. NOTE: this example server does not require a bind with user dn/password.
 
-Example
+*Example:*
 
-`q search.q`
+Kx docker image: `q search.q` 
+
+Local instance: `q search.q -host 0.0.0.0`
