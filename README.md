@@ -125,6 +125,8 @@ pacman -S <x64 package name found in prev search>
 
 Use the provided dll2lib.bat to convert liblber.dll and libldap.dll (found in the mingw64/bin dir of your msys2 install).
 
+The batch file dll2lib.bat should be run from a VS command prompt in order to use tools from Visual Studio.
+
 ```
 dll2lib.bat liblber.dll
 dll2lib.bat libldap.dll
@@ -446,6 +448,6 @@ These are all negative values.
 | -14  | LDAP_NO_RESULTS_RETURNED     | Indicates no results returned.                               |
 | -16  | LDAP_CLIENT_LOOP             | Indicates the library has detected a  loop  in  its processing. |
 | -17  | LDAP_REFERRAL_LIMIT_EXCEEDED | Indicates the referral limit has been exceeded.              |
-| -18  | LDAP_X_CONNECTING            |                                                              |
+| -18  | LDAP_X_CONNECTING            | Indicates async connect attempt is ongoing.                  |
 
 
