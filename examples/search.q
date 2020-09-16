@@ -26,24 +26,28 @@ protocolVersion:.ldap.setOption[globalSession;`LDAP_OPT_PROTOCOL_VERSION;3]
 $[0i~protocolVersion;
   [-1"'Request to locally set 'LDAP_OPT_PROTOCOL_VERSION' option successfully processed'";];
   [-2"'Request to locally set 'LDAP_OPT_PROTOCOL_VERSION' option failed with return: '",
-     .ldap.err2string[anonSearch`ReturnCode],"'. Exiting.\n";
+     .ldap.err2string[protocolVersion],"'. Exiting.\n";
    exit 1]
   ]
 show .ldap.getOption[globalSession;`LDAP_OPT_API_INFO]
 
 
 -1"\n\n### Bind to sessions server";
-bindSession:.ldap.bind[globalSession;::;::;::]
+bindSession:.ldap.bind[globalSession;::]
 $[0i~bindSession`ReturnCode;
   [-1"'Request to bind to sessions server successfully processed'";];
   [-2"Request to bind to server failed with return: '",
    .ldap.err2string[bindSession`ReturnCode],"'. Exiting.\n";
    exit 1]
   ]
+-1"\n### Bind to session results";
+show bindSession
 
 
 -1"\n\n### Search at base level";
-baseSearch:.ldap.search[globalSession;::;.ldap.LDAP_SCOPE_BASE;`$"(objectClass=*)";::;0;0;0]
+baseScope :.ldap.LDAP_SCOPE_BASE
+baseFilter:"(objectClass=*)"
+baseSearch:.ldap.search[globalSession;baseScope;baseFilter;::]
 $[0i~ baseSearch`ReturnCode;
   [-1"'Request to search at base level successfully processed'";];
   [-2"Request to search at base level failed with return: '",
@@ -57,11 +61,10 @@ show baseSearch
 -1"\n\n### Search from ou=people,dc=planetexpress,dc=com and subtree below for Amy. ",
   "Retrieve givenName and email";
 // paramter definitions
-treeBase:`$"ou=people,dc=planetexpress,dc=com"
-scope   :.ldap.LDAP_SCOPE_SUBTREE
-filter  :"(cn=Amy Wong)"
-attrs   :`mail`givenName
-complexSearch:.ldap.search[globalSession;treeBase;scope;filter;attrs;0;0;0]
+customScope :.ldap.LDAP_SCOPE_SUBTREE
+customFilter:"(cn=Amy Wong)"
+customDict  :`baseDN`attr!(`$"ou=people,dc=planetexpress,dc=com";`mail`givenName)
+complexSearch:.ldap.search[globalSession;customScope;customFilter;customDict]
 $[0i~complexSearch`ReturnCode;
   [-1"'Request to apply complex subtree search successfully processed'";];
   [-2"Request to complete complex subtree search failed with return: '",
@@ -76,7 +79,7 @@ show complexSearch
 unBindSession:.ldap.unbind[globalSession]
 $[0i~unBindSession;
   [-1"'Request to unbind from the session successfully processed'.\n";];
-  [-1"Request to unbind from session failed with return: '",
+  [-2"Request to unbind from session failed with return: '",
      unBindSession,"'. Exiting.\n";
    exit 1]
   ]

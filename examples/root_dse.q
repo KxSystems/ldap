@@ -25,7 +25,7 @@ protocolVersion:.ldap.setGlobalOption[`LDAP_OPT_PROTOCOL_VERSION;3]
 $[0i~protocolVersion;
   [-1"'Request to globally set 'LDAP_OPT_PROTOCOL_VERSION' option successfully processed'";];
   [-2"'Request to globally set 'LDAP_OPT_PROTOCOL_VERSION' option failed with return: '",
-     .ldap.err2string[anonSearch`ReturnCode],"'. Exiting.\n";
+     .ldap.err2string[protocolVersion],"'. Exiting.\n";
    exit 1]
   ]
 
@@ -33,7 +33,7 @@ networkTimeout :.ldap.setGlobalOption[`LDAP_OPT_NETWORK_TIMEOUT;timeout]
 $[0i~networkTimeout;
   [-1"'Request to globally set 'LDAP_OPT_NETWORK_TIMEOUT' option successfully processed'";];
   [-2"'Request to globally set 'LDAP_OPT_NETWORK_TIMEOUT' option failed with return: '",
-     .ldap.err2string[anonSearch`ReturnCode],"'. Exiting.\n";
+     .ldap.err2string[networkTimeout],"'. Exiting.\n";
    exit 1]
   ]
 
@@ -43,7 +43,7 @@ sessionInit:.ldap.init[mainSession;enlist `$"ldap://",cliOpts[`host;0],":389"]
 $[0i~sessionInit;
   [-1"'Request to initialize a session successfully processed'";];
   [-2"'Request to initialize a session failed with return: '",
-     .ldap.err2string[anonSearch`ReturnCode],"'. Exiting.\n";
+     .ldap.err2string[sessionInit],"'. Exiting.\n";
    exit 1]
   ]
 
@@ -51,10 +51,10 @@ $[0i~sessionInit;
 -1"\n\n### Retrieve session options";
 -1"TLS Require Cert: ",string .ldap.getOption[mainSession;`LDAP_OPT_X_TLS_REQUIRE_CERT];
 -1"Protocol version: ",string .ldap.getOption[mainSession;`LDAP_OPT_PROTOCOL_VERSION];
--1"Network timeout: ", string .ldap.getOption[mainSession;`LDAP_OPT_NETWORK_TIMEOUT];
+-1"Network timeout : ", string .ldap.getOption[mainSession;`LDAP_OPT_NETWORK_TIMEOUT];
 
 -1"\n\n### Connecting and searching for base attributes using anon bind";
-anonSearch:.ldap.search[mainSession;::;.ldap.LDAP_SCOPE_BASE;`$"(objectClass=*)";::;0;0;0]
+anonSearch:.ldap.search[mainSession;.ldap.LDAP_SCOPE_BASE;`$"(objectClass=*)";::]
 $[0i~anonSearch`ReturnCode;
   [-1"'Request to run anonymous base attribute search successfully processed'";];
   [-2"'Request to run anonymous base attribute search failed with return: '",
