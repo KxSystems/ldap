@@ -40,7 +40,7 @@ $[0i~bindSession`ReturnCode;
    .ldap.err2string[bindSession`ReturnCode],"'. Exiting.\n";
    exit 1]
   ]
-<<<<<<< HEAD
+
 -1"\n### Bind to session results";
 show bindSession
 
@@ -62,7 +62,6 @@ show baseSearch
 -1"\n\n### Search from ou=people,dc=planetexpress,dc=com and subtree below for Amy. ",
   "Retrieve givenName and email";
 // paramter definitions
-<<<<<<< HEAD
 customScope :.ldap.LDAP_SCOPE_SUBTREE
 customFilter:"(cn=Amy Wong)"
 customDict  :`baseDN`attr!(`$"ou=people,dc=planetexpress,dc=com";`mail`givenName)
