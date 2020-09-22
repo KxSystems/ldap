@@ -11,14 +11,27 @@ search_s:`kdbldap 2:(`kdbldap_search_s;8)
 unbind_s:`kdbldap 2:(`kdbldap_unbind_s;1)
 err2string:`kdbldap 2:(`kdbldap_err2string;1)
 
-bind:{[sess;baseDN;cred;mech]
-  if[baseDN~(::);baseDN:`];if[cred~(::);cred:`];if[mech~(::);mech:`];
-  bind_s[sess;baseDN;cred;mech]
+
+bind:{[sess;customDict]
+  defaultKeys:`dn`cred`mech;
+  defaultVals:```;
+  defaultDict:defaultKeys!defaultVals;
+  if[customDict~(::);customDict:()!()];
+  if[99h<>type customDict;'"customDict must be (::) or a dictionary"];
+  updDict:defaultDict,customDict;
+  bindSession:bind_s[sess;;;]. updDict defaultKeys;
+  bindSession
   }
 
-search:{[sess;baseDN;scope;filter;attrib;attrsOnly;timeLimit;sizeLimit]
-  if[baseDN~(::);baseDN:`];if[filter~(::);filter:`$()];if[attrib~(::);attrib:`$()];
-  search_s[sess;baseDN;scope;filter;attrib;attrsOnly;timeLimit;sizeLimit]
+search:{[sess;scope;filter;customDict]
+  defaultKeys:`baseDN`attr`attrsOnly`timeLimit`sizeLimit;
+  defaultVals:(`$"";`$();0;0;0);
+  defaultDict:defaultKeys!defaultVals;
+  if[customDict~(::);customDict:()!()];
+  if[99h<>type customDict;'"customDict must be (::) or a dictionary"];
+  updDict:defaultDict,customDict;
+  searchRes:search_s[sess;;scope;filter;;;;]. updDict defaultKeys;
+  searchRes
   }
 
 unbind:unbind_s

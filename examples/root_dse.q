@@ -51,10 +51,10 @@ $[0i~sessionInit;
 -1"\n\n### Retrieve session options";
 -1"TLS Require Cert: ",string .ldap.getOption[mainSession;`LDAP_OPT_X_TLS_REQUIRE_CERT];
 -1"Protocol version: ",string .ldap.getOption[mainSession;`LDAP_OPT_PROTOCOL_VERSION];
--1"Network timeout: ", string .ldap.getOption[mainSession;`LDAP_OPT_NETWORK_TIMEOUT];
+-1"Network timeout : ", string .ldap.getOption[mainSession;`LDAP_OPT_NETWORK_TIMEOUT];
 
 -1"\n\n### Connecting and searching for base attributes using anon bind";
-anonSearch:.ldap.search[mainSession;::;.ldap.LDAP_SCOPE_BASE;`$"(objectClass=*)";::;0;0;0]
+anonSearch:.ldap.search[mainSession;.ldap.LDAP_SCOPE_BASE;`$"(objectClass=*)";::]
 $[0i~anonSearch`ReturnCode;
   [-1"'Request to run anonymous base attribute search successfully processed'";];
   [-2"'Request to run anonymous base attribute search failed with return: '",
