@@ -24,6 +24,17 @@ extern "C" {
 EXP K kdbldap_init(K sess,K uris);
 
 /**
+ * Sends a StartTLS request to a server, waits for the reply, and 
+ * then installs TLS handlers on the session if the request succeeded. 
+ * The routine returns LDAP_SUCCESS if everything succeeded, otherwise 
+ * it returns an LDAP error code
+ *
+ * @param sess int/long that represents the session previously 
+ * created via .ldap.init
+ */
+EXP K kdbldap_start_tls(K sess);
+
+/**
  * Sets options globally that affect LDAP operating procedures
  * 
  * @param option a symbol for the option you wish to set globally
