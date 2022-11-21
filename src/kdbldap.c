@@ -78,6 +78,16 @@ K kdbldap_init(K sess, K uris)
     return ki(res);
 }
 
+K kdbldap_start_tls(K sess)
+{
+    CHECK_PARAM_INT_TYPE(sess,"start_tls");
+    int idx = getInt(sess);
+    void* session = getSession(idx);
+    CHECK_SESSION(session);
+    int res= ldap_start_tls_s(session,NULL,NULL);
+    return ki(res);
+}
+
 static K setStringOption(LDAP* ld, int option, K value)
 {
     CHECK_PARAM_STRING_TYPE(value,"set_option");
