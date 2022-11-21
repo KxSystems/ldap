@@ -2,6 +2,7 @@
 
 /  intialise ldap functions
 init:`kdbldap 2:(`kdbldap_init;2)
+startTLS:`kdbldap 2:(`kdbldap_start_tls;1)
 setOption:`kdbldap 2:(`kdbldap_set_option;3)
 setGlobalOption:`kdbldap 2:(`kdbldap_set_global_option;2)
 getOption:`kdbldap 2:(`kdbldap_get_option;2)
