@@ -8,8 +8,8 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
   cp -r /usr/local/opt/openldap/lib ./cbuild/
   cp -r /usr/local/opt/openldap/include ./cbuild/
 elif [ "$TRAVIS_OS_NAME" == "linux" ]; then
-  wget -q https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.4.50.tgz 
-  tar xvf openldap-2.4.50.tgz -C ./cbuild --strip-components=1
+  wget -q https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.6.3.tgz
+  tar xvf openldap-2.6.3.tgz -C ./cbuild --strip-components=1
   cd cbuild
   ./configure --disable-slapd --with-tls=openssl
   make

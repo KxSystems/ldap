@@ -1,8 +1,6 @@
 jobs:
   include:
-  - dist: xenial
-    os: linux
-  - dist: trusty 
+  - dist: focal
     os: linux
   - dist: bionic
     os: linux
@@ -97,5 +95,5 @@ deploy:
   file: "$FILE_NAME"
   on:
     tags: true
-    condition: $TRAVIS_OS_NAME = windows || $TRAVIS_OS_NAME = osx || ($TRAVIS_DIST = trusty && $TRAVIS_OS_NAME = linux) 
+    condition: $TRAVIS_OS_NAME = windows || $TRAVIS_OS_NAME = osx || ($TRAVIS_DIST = bionic && $TRAVIS_OS_NAME = linux) 
   skip_cleanup: 'true' #  prevent Travis CI from resetting your working directory and deleting all changes made during the build 
