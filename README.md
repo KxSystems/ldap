@@ -343,6 +343,15 @@ Gets options globally that affect LDAP operating procedures. Reference .ldap.get
 
 Syntax: `.ldap.getGlobalOption[option]`
 
+### .ldap.startTLS
+
+Using ldaps:// (with the appropriate TLS/SSL options) will perform the TLS handshake automatically on connection.
+An alternative is to use `.ldap.startTLS`  for initialising a TLS handshake on a normal ldap connection (calls [ldap_start_tls_s](https://linux.die.net/man/3/ldap_start_tls_s))
+
+`.ldap.startTLS` sends a StartTLS request to a server, waits for the reply, and then installs TLS handlers on the session if the request succeeded. The routine returns LDAP_SUCCESS if everything succeeded, otherwise it returns an LDAP error code.
+
+Syntax: `.ldap.startTLS[sess]`
+
 ### .ldap.bind
 
 Synchronous bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. See [here](https://ldap.com/the-ldap-bind-operation/) for reference documentation
