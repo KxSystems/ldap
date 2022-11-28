@@ -4,12 +4,13 @@ RUN yum -y install gcc && \
     yum -y install cmake && \
     yum -y install make && \
     yum -y install vim && \
-    yum -y install openssl-devel.x86_64 && \
     yum -y install wget
 
 RUN yum clean all
 
-RUN mkdir -p /source/api/ /source/code/ && cd /source/api && wget https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.4.50.tgz && tar xvf openldap-2.4.50.tgz --strip-components=1
+RUN cd /tmp && wget --no-check-certificate https://ftp.openssl.org/source/old/1.1.1/openssl-1.1.1.tar.gz && tar xvf openssl-1.1.1.tar.gz && cd openssl-1.1.1/ && ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib && make && make install
+
+RUN mkdir -p /source/api/ /source/code/ && cd /source/api && wget --no-check-certificate https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.6.3.tgz && tar xvf openldap-2.6.3.tgz --strip-components=1
 RUN cd /source/api/ && ./configure --disable-slapd --with-tls=openssl && make && make install
 WORKDIR /source/code/
 
