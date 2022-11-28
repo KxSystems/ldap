@@ -82,7 +82,7 @@ or
 
 The latest release of OpenLdap is referenced [here](https://www.openldap.org/software/release/)
 
-For example, the 2.4.50 release is available in source form from [here](https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.6.3.tgz )
+For example, the 2.6.3 release is available in source form from [here](https://www.openldap.org/software//download/OpenLDAP/openldap-release/openldap-2.6.3.tgz )
 
 To build/install, unzip the downloaded source and run
 
