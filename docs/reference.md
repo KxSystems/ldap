@@ -512,7 +512,7 @@ API error codes are negative integers.
 LDAP supports a range of security mechanisms as part of the `bind` call. 
 Check with your LDAP server admin what is supported for your system. 
 
-!!! tip "Often found in the root attribute `supportedSASLMechanisms`"
+> Tip: Often found in the root attribute `supportedSASLMechanisms`
 
 Most of these checks are performed externally, in separate code related to your security mechanism.
 

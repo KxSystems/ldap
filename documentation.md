@@ -37,54 +37,54 @@ Sets options per session that affect LDAP operating procedures. Reference [ldap_
 
 Where
 
-- `sess` is an int/long that represents the session previously created via .ldap.init
-- `option` is a symbol for the option you wish to set. See supported options below.
+- `sess` is an int/long that represents the session previously created via `.ldap.init`<br>
+- `option` is a symbol for the option you wish to set. See supported options below.<br>
 - `value` is the value relating to the option. The data type depends on the option selected (see below)
 
 Supported LDAP options
 
-- `LDAP_OPT_CONNECT_ASYNC` (value data type int/long)
-- `LDAP_OPT_DEBUG_LEVEL` (value data type int/long)
-- `LDAP_OPT_DEREF` (value can be `.ldap.LDAP_DEREF_NEVER`, `.ldap.LDAP_DEREF_SEARCHING`, `.ldap.LDAP_DEREF_FINDING` or `.ldap.LDAP_DEREF_ALWAYS`)
-- `LDAP_OPT_DIAGNOSTIC_MESSAGE` (value data type string/symbol)
-- `LDAP_OPT_NETWORK_TIMEOUT` (value data type int/long - representing microseconds)
-- `LDAP_OPT_MATCHED_DN` (value data type string/symbol)
-- `LDAP_OPT_PROTOCOL_VERSION` (value data type int/long)
-- `LDAP_OPT_REFERRALS` (value can be `.ldap.LDAP_OPT_ON` or `.ldap.LDAP_OPT_OFF`)
-- `LDAP_OPT_RESULT_CODE` (value data type int/long)
-- `LDAP_OPT_SIZELIMIT` (value data type int/long)
-- `LDAP_OPT_TIMELIMIT` (value data type int/long)
-- `LDAP_OPT_TIMEOUT` (value data type int/long - representing microseconds)
+`LDAP_OPT_CONNECT_ASYNC` (value data type int/long)<br>
+`LDAP_OPT_DEBUG_LEVEL` (value data type int/long)<br>
+`LDAP_OPT_DEREF` (value can be `.ldap.LDAP_DEREF_NEVER`, `.ldap.LDAP_DEREF_SEARCHING`, `.ldap.LDAP_DEREF_FINDING` or `.ldap.LDAP_DEREF_ALWAYS`)<br>
+`LDAP_OPT_DIAGNOSTIC_MESSAGE` (value data type string/symbol)<br>
+`LDAP_OPT_NETWORK_TIMEOUT` (value data type int/long representing microseconds)<br>
+`LDAP_OPT_MATCHED_DN` (value data type string/symbol)<br>
+`LDAP_OPT_PROTOCOL_VERSION` (value data type int/long)<br>
+`LDAP_OPT_REFERRALS` (value can be `.ldap.LDAP_OPT_ON` or `.ldap.LDAP_OPT_OFF`)<br>
+`LDAP_OPT_RESULT_CODE` (value data type int/long)<br>
+`LDAP_OPT_SIZELIMIT` (value data type int/long)<br>
+`LDAP_OPT_TIMELIMIT` (value data type int/long)<br>
+`LDAP_OPT_TIMEOUT` (value data type int/long - representing microseconds)
 
 Supported SASL options
 
-- `LDAP_OPT_X_SASL_MAXBUFSIZE` (value data type long)
-- `LDAP_OPT_X_SASL_NOCANON` (value data type int/long)
-- `LDAP_OPT_X_SASL_SECPROPS` (value data type string/symbol)
-- `LDAP_OPT_X_SASL_SSF_EXTERNAL` (value data type long)
-- `LDAP_OPT_X_SASL_SSF_MAX` (value data type long)
-- `LDAP_OPT_X_SASL_SSF_MIN` (value data type long)
+`LDAP_OPT_X_SASL_MAXBUFSIZE` (value data type long)<br>
+`LDAP_OPT_X_SASL_NOCANON` (value data type int/long)<br>
+`LDAP_OPT_X_SASL_SECPROPS` (value data type string/symbol)<br>
+`LDAP_OPT_X_SASL_SSF_EXTERNAL` (value data type long)<br>
+`LDAP_OPT_X_SASL_SSF_MAX` (value data type long)<br>
+`LDAP_OPT_X_SASL_SSF_MIN` (value data type long)
 
 Supported TCP options
 
-- `LDAP_OPT_X_KEEPALIVE_IDLE` (value data type int/long)
-- `LDAP_OPT_X_KEEPALIVE_PROBES` (value data type int/long)
-- `LDAP_OPT_X_KEEPALIVE_INTERVAL` (value data type int/long)
+`LDAP_OPT_X_KEEPALIVE_IDLE` (value data type int/long)<br>
+`LDAP_OPT_X_KEEPALIVE_PROBES` (value data type int/long)<br>
+`LDAP_OPT_X_KEEPALIVE_INTERVAL` (value data type int/long)
 
 Supported TLS options
 
-- `LDAP_OPT_X_TLS_CACERTDIR` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_CACERTFILE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_CERTFILE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_CIPHER_SUITE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_CRLCHECK` (value data type int/long)
-- `LDAP_OPT_X_TLS_CRLFILE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_DHFILE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_KEYFILE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_NEWCTX` (value data type int/long)
-- `LDAP_OPT_X_TLS_PROTOCOL_MIN` (value data type int/long)
-- `LDAP_OPT_X_TLS_RANDOM_FILE` (value data type string/symbol)
-- `LDAP_OPT_X_TLS_REQUIRE_CERT` (value data type int/long)
+`LDAP_OPT_X_TLS_CACERTDIR` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_CACERTFILE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_CERTFILE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_CIPHER_SUITE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_CRLCHECK` (value data type int/long)<br>
+`LDAP_OPT_X_TLS_CRLFILE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_DHFILE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_KEYFILE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_NEWCTX` (value data type int/long)<br>
+`LDAP_OPT_X_TLS_PROTOCOL_MIN` (value data type int/long)<br>
+`LDAP_OPT_X_TLS_RANDOM_FILE` (value data type string/symbol)<br>
+`LDAP_OPT_X_TLS_REQUIRE_CERT` (value data type int/long)
 
 ### `.ldap.setGlobalOption`
 
@@ -110,55 +110,55 @@ Where
 
 Value returned from function depends on options used. Supported LDAP options
 
-- `LDAP_OPT_API_FEATURE_INFO` (returns dict containing feature version info - subset of LDAP_OPT_API_INFO)
-- `LDAP_OPT_API_INFO` (returns dict containing API version info)
-- `LDAP_OPT_CONNECT_ASYNC` (returns int)
-- `LDAP_OPT_DEBUG_LEVEL` (returns int)
-- `LDAP_OPT_DEREF` (returns int)
-- `LDAP_OPT_DESC` (returns int)
-- `LDAP_OPT_DIAGNOSTIC_MESSAGE` (returns string)
-- `LDAP_OPT_MATCHED_DN` (returns string)
-- `LDAP_OPT_NETWORK_TIMEOUT` (return int representing microseconds)
-- `LDAP_OPT_PROTOCOL_VERSION` (returns int)
-- `LDAP_OPT_REFERRALS` (returns int)
-- `LDAP_OPT_RESULT_CODE` (returns int)
-- `LDAP_OPT_SIZELIMIT` (returns int)
-- `LDAP_OPT_TIMELIMIT` (returns int)
+`LDAP_OPT_API_FEATURE_INFO` (returns dict containing feature version info - subset of `LDAP_OPT_API_INFO`)<br>
+`LDAP_OPT_API_INFO` (returns dict containing API version info)<br>
+`LDAP_OPT_CONNECT_ASYNC` (returns int)<br>
+`LDAP_OPT_DEBUG_LEVEL` (returns int)<br>
+`LDAP_OPT_DEREF` (returns int)<br>
+`LDAP_OPT_DESC` (returns int)<br>
+`LDAP_OPT_DIAGNOSTIC_MESSAGE` (returns string)<br>
+`LDAP_OPT_MATCHED_DN` (returns string)<br>
+`LDAP_OPT_NETWORK_TIMEOUT` (return int representing microseconds)<br>
+`LDAP_OPT_PROTOCOL_VERSION` (returns int)<br>
+`LDAP_OPT_REFERRALS` (returns int)<br>
+`LDAP_OPT_RESULT_CODE` (returns int)<br>
+`LDAP_OPT_SIZELIMIT` (returns int)<br>
+`LDAP_OPT_TIMELIMIT` (returns int)<br>
 - `LDAP_OPT_TIMEOUT` (return int representing microseconds)
 
 Supported SASL options
 
-- `LDAP_OPT_X_SASL_AUTHCID` (returns string)
-- `LDAP_OPT_X_SASL_AUTHZID` (returns string)
-- `LDAP_OPT_X_SASL_MAXBUFSIZE` (returns long)
-- `LDAP_OPT_X_SASL_MECH` (returns string)
-- `LDAP_OPT_X_SASL_MECHLIST` (returns string)
-- `LDAP_OPT_X_SASL_NOCANON` (returns int)
-- `LDAP_OPT_X_SASL_REALM` (returns string)
-- `LDAP_OPT_X_SASL_SSF` (returns long)
-- `LDAP_OPT_X_SASL_SSF_MAX` (returns long)
-- `LDAP_OPT_X_SASL_SSF_MIN` (returns long)
-- `LDAP_OPT_X_SASL_USERNAME` (returns string)
+`LDAP_OPT_X_SASL_AUTHCID` (returns string)<br>
+`LDAP_OPT_X_SASL_AUTHZID` (returns string)<br>
+`LDAP_OPT_X_SASL_MAXBUFSIZE` (returns long)<br>
+`LDAP_OPT_X_SASL_MECH` (returns string)<br>
+`LDAP_OPT_X_SASL_MECHLIST` (returns string)<br>
+`LDAP_OPT_X_SASL_NOCANON` (returns int)<br>
+`LDAP_OPT_X_SASL_REALM` (returns string)<br>
+`LDAP_OPT_X_SASL_SSF` (returns long)<br>
+`LDAP_OPT_X_SASL_SSF_MAX` (returns long)<br>
+`LDAP_OPT_X_SASL_SSF_MIN` (returns long)<br>
+`LDAP_OPT_X_SASL_USERNAME` (returns string)
 
 Supported TCP options
 
-- `LDAP_OPT_X_KEEPALIVE_IDLE` (returns int)
-- `LDAP_OPT_X_KEEPALIVE_PROBES` (returns int)
-- `LDAP_OPT_X_KEEPALIVE_INTERVAL` (returns int)
+`LDAP_OPT_X_KEEPALIVE_IDLE` (returns int)<br>
+`LDAP_OPT_X_KEEPALIVE_PROBES` (returns int)<br>
+`LDAP_OPT_X_KEEPALIVE_INTERVAL` (returns int)
 
 Supported TLS options
 
-`- LDAP_OPT_X_TLS_CACERTDIR` (returns string)
-`- LDAP_OPT_X_TLS_CACERTFILE` (returns string)
-`- LDAP_OPT_X_TLS_CERTFILE` (returns string)
-`- LDAP_OPT_X_TLS_CIPHER_SUITE` (returns string)
-`- LDAP_OPT_X_TLS_CRLCHECK` (returns int)
-`- LDAP_OPT_X_TLS_CRLFILE` (returns string)
-`- LDAP_OPT_X_TLS_DHFILE` (returns string)
-`- LDAP_OPT_X_TLS_KEYFILE` (returns string)
-`- LDAP_OPT_X_TLS_PROTOCOL_MIN` (returns int)
-`- LDAP_OPT_X_TLS_RANDOM_FILE` (returns string)
-`- LDAP_OPT_X_TLS_REQUIRE_CERT` (returns int)
+`LDAP_OPT_X_TLS_CACERTDIR` (returns string)<br>
+`LDAP_OPT_X_TLS_CACERTFILE` (returns string)<br>
+`LDAP_OPT_X_TLS_CERTFILE` (returns string)<br>
+`LDAP_OPT_X_TLS_CIPHER_SUITE` (returns string)<br>
+`LDAP_OPT_X_TLS_CRLCHECK` (returns int)<br>
+`LDAP_OPT_X_TLS_CRLFILE` (returns string)<br>
+`LDAP_OPT_X_TLS_DHFILE` (returns string)<br>
+`LDAP_OPT_X_TLS_KEYFILE` (returns string)<br>
+`LDAP_OPT_X_TLS_PROTOCOL_MIN` (returns int)<br>
+`LDAP_OPT_X_TLS_RANDOM_FILE` (returns string)<br>
+`LDAP_OPT_X_TLS_REQUIRE_CERT` (returns int)
 
 ### `.ldap.getGlobalOption`
 
