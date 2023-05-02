@@ -39,7 +39,7 @@ General information is available [here](https://ldap.com/).
 
 ## Examples
 
-:point_right: [`Examples guide`](example/README.md)
+:point_right: [`Examples guide`](examples/README.md)
 
 ## OpenLdap license
 
