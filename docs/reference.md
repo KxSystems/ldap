@@ -41,7 +41,7 @@ name | type | content | default
 -----|------|---------|--------
 `dn` | string or symbol | user to authenticate | Anonymous simple authentication. (Typical for SASL authentication as most SASL mechanisms identify the target account within the encoded credentials.)
 `cred` | char/byte list or symbol | LDAP credentials, e.g. password | Assume no password required.
-`mech` | string or symbol | SASL mechanism for authentication | `LDAP_SASL_SIMPLE`<br><br>Query the attribute `supportedSASLMechanisms` from the  server’s `rootDSE` for the list of SASL mechanisms the server supports.
+`mech` | string or symbol | SASL mechanism for authentication | If not present, defaults to LDAP_SASL_SIMPLE (simple authentication) which is represented by an empty string.<br><br>Query the attribute `supportedSASLMechanisms` from the  server’s `rootDSE` for the list of SASL mechanisms the server supports.
 
 Result dictionary:
 
@@ -233,6 +233,9 @@ Where
 
 returns results as a dictionary.
 
+:globe_with_meridians:
+[The LDAP search operation](https://ldap.com/the-ldap-search-operation/)
+
 Search options (`opts`):
 
 name | type | content | default
@@ -352,6 +355,9 @@ The session ID can be re-used when subsequently creating a new session with `.ld
 q).ldap.unbind[0i]
 0i
 ```
+
+:globe_with_meridians:
+[The LDAP unbind operation](https://ldap.com/the-ldap-unbind-operation/)
 
 
 ## Scope
