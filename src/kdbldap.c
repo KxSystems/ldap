@@ -119,25 +119,20 @@ static K setTimevalOption(LDAP* ld, int option, K value)
     return ki(ldap_set_option(ld, option, &timeVal));
 }
 
+#define SET_OPTION(x,y,z) if(strcmp(option->s,#y)==0)return set##x##Option(ld,y,z);
+
 static K set_option(LDAP* ld, K option,K value)
 {
     CHECK_PARAM_TYPE(option,-KS,"set_option");
     
     /* LDAP SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_CONNECT_ASYNC")==0)
-        return setIntOption(ld,LDAP_OPT_CONNECT_ASYNC,value);
-    if (strcmp(option->s,"LDAP_OPT_DEBUG_LEVEL")==0)
-        return setIntOption(ld,LDAP_OPT_DEBUG_LEVEL,value);
-    if (strcmp(option->s,"LDAP_OPT_DEREF")==0)
-        return setIntOption(ld,LDAP_OPT_DEREF,value);
-    if (strcmp(option->s,"LDAP_OPT_DIAGNOSTIC_MESSAGE")==0)
-        return setStringOption(ld,LDAP_OPT_DIAGNOSTIC_MESSAGE,value);
-    if (strcmp(option->s,"LDAP_OPT_MATCHED_DN")==0)
-        return setStringOption(ld,LDAP_OPT_MATCHED_DN,value);
-    if (strcmp(option->s,"LDAP_OPT_NETWORK_TIMEOUT")==0)
-        return setTimevalOption(ld,LDAP_OPT_NETWORK_TIMEOUT,value);
-    if (strcmp(option->s,"LDAP_OPT_PROTOCOL_VERSION")==0)
-        return setIntOption(ld,LDAP_OPT_PROTOCOL_VERSION,value);
+    SET_OPTION(Int,LDAP_OPT_CONNECT_ASYNC,value);
+    SET_OPTION(Int,LDAP_OPT_DEBUG_LEVEL,value);
+    SET_OPTION(Int,LDAP_OPT_DEREF,value);
+    SET_OPTION(String,LDAP_OPT_DIAGNOSTIC_MESSAGE,value);
+    SET_OPTION(String,LDAP_OPT_MATCHED_DN,value);
+    SET_OPTION(Timeval,LDAP_OPT_NETWORK_TIMEOUT,value);
+    SET_OPTION(Int,LDAP_OPT_PROTOCOL_VERSION,value)
     if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
     {
         CHECK_PARAM_INT_TYPE(value,"set_option");
@@ -146,59 +141,34 @@ static K set_option(LDAP* ld, K option,K value)
             return ki(ldap_set_option(ld, LDAP_OPT_REFERRALS, LDAP_OPT_OFF));
         return ki(ldap_set_option(ld, LDAP_OPT_REFERRALS, LDAP_OPT_ON));
     }
-    if (strcmp(option->s,"LDAP_OPT_RESULT_CODE")==0)
-        return setIntOption(ld,LDAP_OPT_RESULT_CODE,value);
-    if (strcmp(option->s,"LDAP_OPT_SIZELIMIT")==0)
-        return setIntOption(ld,LDAP_OPT_SIZELIMIT,value);
-    if (strcmp(option->s,"LDAP_OPT_TIMELIMIT")==0)
-        return setIntOption(ld,LDAP_OPT_TIMELIMIT,value);
-    if (strcmp(option->s,"LDAP_OPT_TIMEOUT")==0)
-        return setTimevalOption(ld,LDAP_OPT_TIMEOUT,value);
+    SET_OPTION(Int,LDAP_OPT_RESULT_CODE,value);
+    SET_OPTION(Int,LDAP_OPT_SIZELIMIT,value);
+    SET_OPTION(Int,LDAP_OPT_TIMELIMIT,value);
+    SET_OPTION(Timeval,LDAP_OPT_TIMEOUT,value);
     /* SASL SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_MAXBUFSIZE")==0)
-        return setBerLenOption(ld,LDAP_OPT_X_SASL_MAXBUFSIZE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_NOCANON")==0)
-        return setIntOption(ld,LDAP_OPT_X_SASL_NOCANON,value);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SECPROPS")==0)
-        return setStringOption(ld,LDAP_OPT_X_SASL_SECPROPS,value);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_EXTERNAL")==0)
-        return setBerLenOption(ld,LDAP_OPT_X_SASL_SSF_EXTERNAL,value);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MAX")==0)
-        return setBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MAX,value);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MIN")==0)
-        return setBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MIN,value);
+    SET_OPTION(BerLen,LDAP_OPT_X_SASL_MAXBUFSIZE,value);
+    SET_OPTION(Int,LDAP_OPT_X_SASL_NOCANON,value);
+    SET_OPTION(String,LDAP_OPT_X_SASL_SECPROPS,value);
+    SET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_EXTERNAL,value);
+    SET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_MAX,value);
+    SET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_MIN,value);
     /* TCP SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_IDLE")==0)
-        return setIntOption(ld,LDAP_OPT_X_KEEPALIVE_IDLE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_PROBES")==0)
-        return setIntOption(ld,LDAP_OPT_X_KEEPALIVE_PROBES,value);
-    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_INTERVAL")==0)
-        return setIntOption(ld,LDAP_OPT_X_KEEPALIVE_INTERVAL,value);
+    SET_OPTION(Int,LDAP_OPT_X_KEEPALIVE_IDLE,value);
+    SET_OPTION(Int,LDAP_OPT_X_KEEPALIVE_PROBES,value);
+    SET_OPTION(Int,LDAP_OPT_X_KEEPALIVE_INTERVAL,value);
     /* TLS SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CACERTDIR")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_CACERTDIR,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CACERTFILE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_CACERTFILE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CERTFILE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_CERTFILE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CIPHER_SUITE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_CIPHER_SUITE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLCHECK")==0)
-        return setIntOption(ld,LDAP_OPT_X_TLS_CRLCHECK,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLFILE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_CRLFILE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_DHFILE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_DHFILE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_KEYFILE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_KEYFILE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_NEWCTX")==0)
-        return setIntOption(ld,LDAP_OPT_X_TLS_NEWCTX,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_PROTOCOL_MIN")==0)
-        return setIntOption(ld,LDAP_OPT_X_TLS_PROTOCOL_MIN,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_RANDOM_FILE")==0)
-        return setStringOption(ld,LDAP_OPT_X_TLS_RANDOM_FILE,value);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_REQUIRE_CERT")==0)
-        return setIntOption(ld,LDAP_OPT_X_TLS_REQUIRE_CERT,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_CACERTDIR,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_CACERTFILE,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_CERTFILE,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_CIPHER_SUITE,value);
+    SET_OPTION(Int,LDAP_OPT_X_TLS_CRLCHECK,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_CRLFILE,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_DHFILE,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_KEYFILE,value);
+    SET_OPTION(Int,LDAP_OPT_X_TLS_NEWCTX,value);
+    SET_OPTION(Int,LDAP_OPT_X_TLS_PROTOCOL_MIN,value);
+    SET_OPTION(String,LDAP_OPT_X_TLS_RANDOM_FILE,value);
+    SET_OPTION(Int,LDAP_OPT_X_TLS_REQUIRE_CERT,value);
     return krr("Unsupported option");
 }
 
@@ -214,6 +184,18 @@ K kdbldap_set_option(K sess,K option,K value)
     void* session = getSession(idx);
     CHECK_SESSION(session);
     return set_option(session,option,value);
+}
+
+static K getStringListOption(LDAP* ld, int option)
+{
+    char* c;
+    char** valueStr = NULL;
+    K list=ktn(0,0);
+    ldap_get_option(ld, option, &valueStr);
+    if(!valueStr)return list;
+    for(c=*valueStr;c;c=*++valueStr)
+       jk(&list,kp(c));
+    return list;
 }
 
 static K getStringOption(LDAP* ld, int option)
@@ -255,9 +237,11 @@ static K getTimevalOption(LDAP* ld, int option)
     return ki(res);
 }
 
+#define GET_OPTION(x,y) if(strcmp(option->s,#y)==0)return get##x##Option(ld,y);
+
 static K get_option(LDAP* ld,K option)
 {
-    CHECK_PARAM_TYPE(option,-KS,"set_option");
+    CHECK_PARAM_TYPE(option,-KS,"get_option");
     
     /* LDAP SUPPORTED OPTIONS */
     if (strcmp(option->s,"LDAP_OPT_API_FEATURE_INFO")==0)
@@ -325,85 +309,47 @@ static K get_option(LDAP* ld,K option)
         ldap_memfree(info.ldapai_vendor_name);
         return xD(keys,vals);
     }
-    if (strcmp(option->s,"LDAP_OPT_CONNECT_ASYNC")==0)
-        return getIntOption(ld,LDAP_OPT_CONNECT_ASYNC);
-    if (strcmp(option->s,"LDAP_OPT_DEBUG_LEVEL")==0)
-        return getIntOption(ld,LDAP_OPT_DEBUG_LEVEL);
-    if (strcmp(option->s,"LDAP_OPT_DEREF")==0)
-        return getIntOption(ld,LDAP_OPT_DEREF);
-    if (strcmp(option->s,"LDAP_OPT_DESC")==0)
-        return getIntOption(ld,LDAP_OPT_DESC);
-    if (strcmp(option->s,"LDAP_OPT_DIAGNOSTIC_MESSAGE")==0)
-        return getStringOption(ld,LDAP_OPT_DIAGNOSTIC_MESSAGE);
-    if (strcmp(option->s,"LDAP_OPT_NETWORK_TIMEOUT")==0)
-        return getTimevalOption(ld,LDAP_OPT_NETWORK_TIMEOUT);
-    if (strcmp(option->s,"LDAP_OPT_MATCHED_DN")==0)
-        return getStringOption(ld,LDAP_OPT_MATCHED_DN);
-    if (strcmp(option->s,"LDAP_OPT_PROTOCOL_VERSION")==0)
-        return getIntOption(ld,LDAP_OPT_PROTOCOL_VERSION);
-    if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
-        return getIntOption(ld,LDAP_OPT_REFERRALS);
-    if (strcmp(option->s,"LDAP_OPT_RESULT_CODE")==0)
-        return getIntOption(ld,LDAP_OPT_RESULT_CODE);
-    if (strcmp(option->s,"LDAP_OPT_SIZELIMIT")==0)
-        return getIntOption(ld,LDAP_OPT_SIZELIMIT);
-    if (strcmp(option->s,"LDAP_OPT_TIMELIMIT")==0)
-        return getIntOption(ld,LDAP_OPT_TIMELIMIT);
-    if (strcmp(option->s,"LDAP_OPT_TIMEOUT")==0)
-        return getTimevalOption(ld,LDAP_OPT_TIMEOUT);
+    GET_OPTION(Int,LDAP_OPT_CONNECT_ASYNC);
+    GET_OPTION(Int,LDAP_OPT_DEBUG_LEVEL);
+    GET_OPTION(Int,LDAP_OPT_DEREF);
+    GET_OPTION(Int,LDAP_OPT_DESC);
+    GET_OPTION(String,LDAP_OPT_DIAGNOSTIC_MESSAGE);
+    GET_OPTION(Timeval,LDAP_OPT_NETWORK_TIMEOUT);
+    GET_OPTION(String,LDAP_OPT_MATCHED_DN);
+    GET_OPTION(Int,LDAP_OPT_PROTOCOL_VERSION);
+    GET_OPTION(Int,LDAP_OPT_REFERRALS);
+    GET_OPTION(Int,LDAP_OPT_RESULT_CODE);
+    GET_OPTION(Int,LDAP_OPT_SIZELIMIT);
+    GET_OPTION(Int,LDAP_OPT_TIMELIMIT);
+    GET_OPTION(Timeval,LDAP_OPT_TIMEOUT);
     /* SASL SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_AUTHCID")==0)
-        return getStringOption(ld,LDAP_OPT_X_SASL_AUTHCID);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_AUTHZID")==0)
-        return getStringOption(ld,LDAP_OPT_X_SASL_AUTHZID);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_MAXBUFSIZE")==0)
-        return getBerLenOption(ld,LDAP_OPT_X_SASL_MAXBUFSIZE);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_MECH")==0)
-        return getStringOption(ld,LDAP_OPT_X_SASL_MECH);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_MECHLIST")==0)
-        return getStringOption(ld,LDAP_OPT_X_SASL_MECHLIST);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_NOCANON")==0)
-        return getIntOption(ld,LDAP_OPT_X_SASL_NOCANON);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_REALM")==0)
-        return getStringOption(ld,LDAP_OPT_X_SASL_REALM);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF")==0)
-        return getBerLenOption(ld,LDAP_OPT_X_SASL_SSF);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MAX")==0)
-        return getBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MAX);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_SSF_MIN")==0)
-        return getBerLenOption(ld,LDAP_OPT_X_SASL_SSF_MIN);
-    if (strcmp(option->s,"LDAP_OPT_X_SASL_USERNAME")==0)
-        return getStringOption(ld,LDAP_OPT_X_SASL_USERNAME);
+    GET_OPTION(String,LDAP_OPT_X_SASL_AUTHCID);
+    GET_OPTION(String,LDAP_OPT_X_SASL_AUTHZID);
+    GET_OPTION(BerLen,LDAP_OPT_X_SASL_MAXBUFSIZE);
+    GET_OPTION(String,LDAP_OPT_X_SASL_MECH);
+    GET_OPTION(StringList,LDAP_OPT_X_SASL_MECHLIST);
+    GET_OPTION(Int,LDAP_OPT_X_SASL_NOCANON);
+    GET_OPTION(String,LDAP_OPT_X_SASL_REALM);
+    GET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF);
+    GET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_MAX);
+    GET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_MIN);
+    GET_OPTION(String,LDAP_OPT_X_SASL_USERNAME);
     /* TCP SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_IDLE")==0)
-        return getIntOption(ld,LDAP_OPT_X_KEEPALIVE_IDLE);
-    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_PROBES")==0)
-        return getIntOption(ld,LDAP_OPT_X_KEEPALIVE_PROBES);
-    if (strcmp(option->s,"LDAP_OPT_X_KEEPALIVE_INTERVAL")==0)
-        return getIntOption(ld,LDAP_OPT_X_KEEPALIVE_INTERVAL);
+    GET_OPTION(Int,LDAP_OPT_X_KEEPALIVE_IDLE);
+    GET_OPTION(Int,LDAP_OPT_X_KEEPALIVE_PROBES);
+    GET_OPTION(Int,LDAP_OPT_X_KEEPALIVE_INTERVAL);
     /* TLS SUPPORTED OPTIONS */
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CACERTDIR")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_CACERTDIR);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CACERTFILE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_CACERTFILE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CERTFILE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_CERTFILE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CIPHER_SUITE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_CIPHER_SUITE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLCHECK")==0)
-        return getIntOption(ld,LDAP_OPT_X_TLS_CRLCHECK);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_CRLFILE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_CRLFILE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_DHFILE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_DHFILE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_KEYFILE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_KEYFILE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_PROTOCOL_MIN")==0)
-        return getIntOption(ld,LDAP_OPT_X_TLS_PROTOCOL_MIN);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_RANDOM_FILE")==0)
-        return getStringOption(ld,LDAP_OPT_X_TLS_RANDOM_FILE);
-    if (strcmp(option->s,"LDAP_OPT_X_TLS_REQUIRE_CERT")==0)
-        return getIntOption(ld,LDAP_OPT_X_TLS_REQUIRE_CERT);
+    GET_OPTION(String,LDAP_OPT_X_TLS_CACERTDIR);
+    GET_OPTION(String,LDAP_OPT_X_TLS_CACERTFILE);
+    GET_OPTION(String,LDAP_OPT_X_TLS_CERTFILE);
+    GET_OPTION(String,LDAP_OPT_X_TLS_CIPHER_SUITE);
+    GET_OPTION(Int,LDAP_OPT_X_TLS_CRLCHECK);
+    GET_OPTION(String,LDAP_OPT_X_TLS_CRLFILE);
+    GET_OPTION(String,LDAP_OPT_X_TLS_DHFILE);
+    GET_OPTION(String,LDAP_OPT_X_TLS_KEYFILE);
+    GET_OPTION(Int,LDAP_OPT_X_TLS_PROTOCOL_MIN);
+    GET_OPTION(String,LDAP_OPT_X_TLS_RANDOM_FILE);
+    GET_OPTION(Int,LDAP_OPT_X_TLS_REQUIRE_CERT);
     return krr("Unsupported option");
 }
 
@@ -452,11 +398,10 @@ K kdbldap_bind_s(K sess, K dn, K cred, K mech)
     jk(&resultvals,ki(res));
     K creds = ktn(KG, credSize);
     if (credSize > 0)
-        memcpy(cred->G0, scred->bv_val, scred->bv_len);
+        memcpy(creds->G0, scred->bv_val, scred->bv_len);
     jk(&resultvals,creds);
-
     ber_bvfree(scred);
-    return xD(resultkeys,resultvals);;
+    return xD(resultkeys,resultvals);
 }
 
 K kdbldap_search_s(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
