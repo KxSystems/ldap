@@ -337,16 +337,16 @@ LDAP_OPT_API_FEATURE_INFO     dictionary
 LDAP_OPT_API_INFO             dictionary
 LDAP_OPT_CONNECT_ASYNC        integer
 LDAP_OPT_DEBUG_LEVEL          integer
-LDAP_OPT_DEREF                integer
-LDAP_OPT_DESC                 integer
-LDAP_OPT_DIAGNOSTIC_MESSAGE   string
-LDAP_OPT_MATCHED_DN           string
+LDAP_OPT_DEREF                integer        
+LDAP_OPT_DESC                 integer        file descriptor associated to the socket buffer of ldap
+LDAP_OPT_DIAGNOSTIC_MESSAGE   string         error string associated to the handle
+LDAP_OPT_MATCHED_DN           string         the matched DN
 LDAP_OPT_NETWORK_TIMEOUT      integer        timeout in microseconds
-LDAP_OPT_PROTOCOL_VERSION     integer
-LDAP_OPT_REFERRALS            integer
-LDAP_OPT_RESULT_CODE          integer
-LDAP_OPT_SIZELIMIT            integer
-LDAP_OPT_TIMELIMIT            integer
+LDAP_OPT_PROTOCOL_VERSION     integer        ldap protocol version
+LDAP_OPT_REFERRALS            integer        implicitly chase referrals or not
+LDAP_OPT_RESULT_CODE          integer        result code associated to the handle
+LDAP_OPT_SIZELIMIT            integer        maximum number of entries to be returned by a search
+LDAP_OPT_TIMELIMIT            integer        time limit after which a search operation should be terminated by the server
 LDAP_OPT_TIMEOUT              integer        timeout in microseconds
 ```
 
@@ -354,26 +354,26 @@ LDAP_OPT_TIMEOUT              integer        timeout in microseconds
 ### `SASL`
 
 ```txt
-LDAP_OPT_X_SASL_AUTHCID      string
-LDAP_OPT_X_SASL_AUTHZID      string
-LDAP_OPT_X_SASL_MAXBUFSIZE   long
-LDAP_OPT_X_SASL_MECH         string
-LDAP_OPT_X_SASL_MECHLIST     string
-LDAP_OPT_X_SASL_NOCANON      integer
-LDAP_OPT_X_SASL_REALM        string
-LDAP_OPT_X_SASL_SSF          long
-LDAP_OPT_X_SASL_SSF_MAX      long
-LDAP_OPT_X_SASL_SSF_MIN      long
-LDAP_OPT_X_SASL_USERNAME     string
+LDAP_OPT_X_SASL_AUTHCID      string          SASL authentication identity
+LDAP_OPT_X_SASL_AUTHZID      string          SASL authorization identity
+LDAP_OPT_X_SASL_MAXBUFSIZE   long            SASL maximum buffer size 
+LDAP_OPT_X_SASL_MECH         string          the SASL mechanism
+LDAP_OPT_X_SASL_MECHLIST     stringlist      list of the available mechanisms
+LDAP_OPT_X_SASL_NOCANON      integer         NOCANON flag (unset,the hostname is canonicalized)
+LDAP_OPT_X_SASL_REALM        string          SASL realm
+LDAP_OPT_X_SASL_SSF          long            SASL SSF
+LDAP_OPT_X_SASL_SSF_MAX      long            SASL maximum SSF
+LDAP_OPT_X_SASL_SSF_MIN      long            SASL minimum SSF
+LDAP_OPT_X_SASL_USERNAME     string          SASL username
 ```
 
 
 ### `TCP`
 
 ```txt
-LDAP_OPT_X_KEEPALIVE_IDLE      integer
-LDAP_OPT_X_KEEPALIVE_PROBES    integer
-LDAP_OPT_X_KEEPALIVE_INTERVAL  integer
+LDAP_OPT_X_KEEPALIVE_IDLE      integer       number of seconds a connection needs to remain idle before TCP starts sending keepalive probes
+LDAP_OPT_X_KEEPALIVE_PROBES    integer       maximum number of keepalive probes TCP should send before dropping the connection
+LDAP_OPT_X_KEEPALIVE_INTERVAL  integer       interval in seconds between individual keepalive probes
 ```
 
 
@@ -407,18 +407,19 @@ The options are listed by protocol.
 ```txt
 LDAP_OPT_CONNECT_ASYNC       integer/long
 LDAP_OPT_DEBUG_LEVEL         integer/long
-LDAP_OPT_DEREF               integer/long    one of: .ldap.LDAP_DEREF_NEVER
+LDAP_OPT_DEREF               integer/long    when alias dereferencing must occur
+                                             one of: .ldap.LDAP_DEREF_NEVER
                                                      .ldap.LDAP_DEREF_SEARCHING
                                                      .ldap.LDAP_DEREF_FINDING
                                                      .ldap.LDAP_DEREF_ALWAYS
 LDAP_OPT_DIAGNOSTIC_MESSAGE  string/symbol
 LDAP_OPT_NETWORK_TIMEOUT     integer/long    number of microseconds for timeout
-LDAP_OPT_MATCHED_DN          string/symbol
-LDAP_OPT_PROTOCOL_VERSION    integer/long
+LDAP_OPT_MATCHED_DN          string/symbol   the matched DN
+LDAP_OPT_PROTOCOL_VERSION    integer/long    ldap protocol version
 LDAP_OPT_REFERRALS           integer/long    .ldap.LDAP_OPT_ON or .ldap.LDAP_OPT_OFF
-LDAP_OPT_RESULT_CODE         integer/long
-LDAP_OPT_SIZELIMIT           integer/long
-LDAP_OPT_TIMELIMIT           integer/long
+LDAP_OPT_RESULT_CODE         integer/long    implicitly chase referrals or not
+LDAP_OPT_SIZELIMIT           integer/long    maximum number of entries to be returned by a search
+LDAP_OPT_TIMELIMIT           integer/long    time limit after which a search operation should be terminated by the server
 LDAP_OPT_TIMEOUT             integer/long    number of microseconds for timeout
 ```
 
@@ -426,21 +427,21 @@ LDAP_OPT_TIMEOUT             integer/long    number of microseconds for timeout
 ### `SASL`
 
 ```txt
-LDAP_OPT_X_SASL_MAXBUFSIZE    long
-LDAP_OPT_X_SASL_NOCANON       integer/long
-LDAP_OPT_X_SASL_SECPROPS      string/symbol
-LDAP_OPT_X_SASL_SSF_EXTERNAL  long
-LDAP_OPT_X_SASL_SSF_MAX       long
-LDAP_OPT_X_SASL_SSF_MIN       long
+LDAP_OPT_X_SASL_MAXBUFSIZE    long           SASL maximum buffer size
+LDAP_OPT_X_SASL_NOCANON       integer/long   NOCANON flag (unset,the hostname is canonicalized)
+LDAP_OPT_X_SASL_SECPROPS      string/symbol  comma-separated list of properties
+LDAP_OPT_X_SASL_SSF_EXTERNAL  long           SASL SSF value related to an authentication performed using an EXTERNAL mechanism
+LDAP_OPT_X_SASL_SSF_MAX       long           SASL maximum SSF
+LDAP_OPT_X_SASL_SSF_MIN       long           SASL minimum SSF
 ```
 
 
 ### `TCP`
 
 ```txt
-LDAP_OPT_X_KEEPALIVE_IDLE      integer/long
-LDAP_OPT_X_KEEPALIVE_PROBES    integer/long
-LDAP_OPT_X_KEEPALIVE_INTERVAL  integer/long
+LDAP_OPT_X_KEEPALIVE_IDLE      integer/long  number of seconds a connection needs to remain idle before TCP starts sending keepalive probes
+LDAP_OPT_X_KEEPALIVE_PROBES    integer/long  maximum number of keepalive probes TCP should send before dropping the connection
+LDAP_OPT_X_KEEPALIVE_INTERVAL  integer/long  interval in seconds between individual keepalive probes
 ```
 
 
