@@ -367,6 +367,53 @@ K kdbldap_get_option(K sess,K option)
     return get_option(session,option);
 }
 
+typedef struct sasl_interact {
+    unsigned long id;           /* same as client/user callback ID */
+    const char *challenge;      /* presented to user (e.g. OTP challenge) */
+    const char *prompt;         /* presented to user (e.g. "Username: ") */
+    const char *defresult;      /* default result string */
+    const void *result;         /* set to point to result */
+    unsigned len;               /* set to length of result */
+} sasl_interact_t;
+
+static int interaction(unsigned flags,sasl_interact_t *interact){
+   interact->result = interact->defresult?interact->defresult:"";
+   interact->len = strlen(interact->result);
+   return LDAP_SUCCESS;
+}
+
+static int lutil_sasl_interact(
+    LDAP *ld,
+    unsigned flags,
+    void *defaults,
+    void *in ){
+    sasl_interact_t *interact = in;
+    while(interact->id) {
+       int rc = interaction(flags,interact);
+       if(rc)return rc;
+       interact++;
+    }
+    return LDAP_SUCCESS;
+}
+
+K kdbldap_interactive_bind_s(K sess, K dn, K flag, K mech)
+{
+    CHECK_PARAM_INT_TYPE(sess,"bind");
+    CHECK_PARAM_STRING_TYPE(dn,"bind");
+    CHECK_PARAM_INT_TYPE(flag,"bind");
+    CHECK_PARAM_STRING_TYPE(mech,"bind");
+    LDAPControl **sctrlsp = NULL;
+    int idx = getInt(sess), iflag=getInt(flag);
+    void* session = getSession(idx);
+    CHECK_SESSION(session);
+    char* dnStr = createString(dn);
+    char* mechStr = createString(mech);
+    int res = ldap_sasl_interactive_bind_s(session,dnStr,mechStr,sctrlsp,NULL,iflag,lutil_sasl_interact,NULL);
+    free(dnStr);
+    free(mechStr);
+    return ki(res);
+}
+
 K kdbldap_bind_s(K sess, K dn, K cred, K mech)
 {
     CHECK_PARAM_STRING_TYPE(dn,"bind");
@@ -403,6 +450,7 @@ K kdbldap_bind_s(K sess, K dn, K cred, K mech)
     ber_bvfree(scred);
     return xD(resultkeys,resultvals);
 }
+
 
 K kdbldap_search_s(K sess,K baseDn, K scope, K filter, K attrs, K attrsOnly, K timeLimit, K sizeLimit)
 {
