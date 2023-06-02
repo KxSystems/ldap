@@ -7,6 +7,7 @@
 [`getGlobalOption`](#ldapgetglobaloption)  Get global LDAP option<br>
 [`getOption`](#ldapgetoption)        Get session LDAP option<br>
 [`init`](#ldapinit)             Initialize session with LDAP server connection details<br>
+[`interactiveBind`](#ldapinteractivebind)             Synchronous bind to authenticate client using SASL auth<br>
 [`search`](#ldapsearch)           Synchronous search for partial or complete copies of entries<br>
 [`setOption`](#ldapsetoption)        Set session LDAP option<br>
 [`setGlobalOption`](#ldapsetglobaloption)  Set global LDAP option<br>
@@ -27,7 +28,7 @@ Where
 -   `sess` is an int or long that represents the session previously created via `.ldap.init`
 -   `opts` is a generic null or a dictionary of non-default options for the bind operation
 
-binds to the session and returns a result code and server credentials as a dictionary.
+binds to the session and returns a result code and server credentials as a dictionary (can use anon or password binding).
 
 Synchronous bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use.
 
@@ -171,6 +172,46 @@ q).ldap.init[1i;enlist `$"noldap://0.0.0.0:389"]
 // retrieve error message for above error code
 q).ldap.err2string[-9i]
 "Bad parameter to an ldap routine"
+```
+
+
+## `.ldap.interactiveBind`
+
+_Synchronous bind to authenticate client using SASL auth (e.g. kerberos)_
+
+```txt
+.ldap.interactiveBind[sess;opts]
+```
+
+Where
+
+-   `sess` is an int or long that represents the session previously created via `.ldap.init`
+-   `opts` is a generic null or a dictionary of non-default options for the bind operation
+
+binds to the session and returns a result code and server credentials as a dictionary.
+
+Synchronous bind operations are used to authenticate clients (and the users or applications behind them) to the directory server, to establish an authorization identity that will be used for subsequent operations processed on that connection, and to specify the LDAP protocol version that the client will use. Many SASL mechanisms require multiple message exchanges to perform a complete authentication.
+
+:globe_with_meridians:
+[The LDAP bind operation](https://ldap.com/the-ldap-bind-operation/)
+
+Valid `opts` entries:
+
+name | type | content | default
+-----|------|---------|--------
+`dn` | string or symbol | user to authenticate | Anonymous simple authentication. (Typical for SASL authentication as most SASL mechanisms identify the target account within the encoded credentials.)
+`flag` | int | Can be .ldap.LDAP_SASL_AUTOMATIC, .ldap.LDAP_SASL_INTERACTIVE, .ldap.LDAP_SASL_QUIET
+`mech` | string or symbol | SASL mechanism for authentication | `LDAP_SASL_SIMPLE`<br><br>Query the attribute `supportedSASLMechanisms` from the  server’s `rootDSE` for the list of SASL mechanisms the server supports. Query the option LDAP_OPT_X_SASL_MECHLIST to see what mechanisms are installed on the client machine.
+
+Returns an ldap [result code](#result-codes)
+
+:point_right:
+[Security mechanisms](#security-mechanisms)
+
+```q
+// Complete a bind to the server with GSSAPI security mech (kerberos), using SASL to automatically negotiate
+q).ldap.interactiveBind[0i;(`mech`flag)!("GSSAPI";.ldap.LDAP_SASL_AUTOMATIC)]
+0i
 ```
 
 
