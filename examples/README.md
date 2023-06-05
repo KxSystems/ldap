@@ -34,3 +34,17 @@ The script includes searches such as searching for a user’s email (This exampl
 ```bash
 q search.q -host 127.0.0.1
 ```
+
+### kerberos.q
+
+Shows an example of binding to an ldap server that uses kerberos authentication. Not all ldap servers avail of this feature. Contact your LDAP server admin for details.
+
+Prior to running, kinit should be executed in order to perform a kerberos user login e.g. `kinit user01` which has been enabled on your LDAP server.
+
+Requires OpenLdap to have been built with Cryus SASL (e.g. on centos, this is the cyrus-sasl-devel package). Prior to running, the Cyrus SASL plugin which supports GSSAPI authentication (e.g. on centos, this is the cyrus-sasl-gssapi package) should be installed. 
+
+When running, the value of the ldap option `LDAP_OPT_X_SASL_MECHLIST` returned, should include GSSAPI (if the correct SASL packages have been installed). Without this, the bind will fail.
+
+```bash
+q kerberos.q -host ldap.edt.org
+```
