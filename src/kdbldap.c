@@ -376,7 +376,31 @@ typedef struct sasl_interact {
     unsigned len;               /* set to length of result */
 } sasl_interact_t;
 
+K ksaslcb=0;
+K ksaslr=0;
+
 static int interaction(unsigned flags,sasl_interact_t *interact){
+   if(ksaslcb){
+       K x,y,z;int r;
+       x=k(0,ksaslcb->s,
+               ki(interact->id),
+               kp(interact->challenge?(S)interact->challenge:(S)""),
+               kp(interact->prompt?(S)interact->prompt:(S)""),
+               kp(interact->defresult?(S)interact->defresult:(S)""),
+               (K)0);
+       if(xt==-128||xn!=2||(y=xx,y->t!=-KI)||((z=xy,z->t!=KC)&&(z->t!=KG))){
+           printf("bind cb error: %s\n",xt==-128?xs:"type");
+           interact->result = 0;
+           interact->len = 0;
+           return LDAP_UNAVAILABLE;
+       }
+       jk(&ksaslr,z);
+       interact->result = z->G0;
+       interact->len = z->n;
+       r=y->i;
+       r0(x);
+       return r;
+   }
    interact->result = interact->defresult?interact->defresult:"";
    interact->len = strlen(interact->result);
    return LDAP_SUCCESS;
@@ -396,7 +420,7 @@ static int lutil_sasl_interact(
     return LDAP_SUCCESS;
 }
 
-K kdbldap_interactive_bind_s(K sess, K dn, K flag, K mech)
+K kdbldap_interactive_bind_s(K sess, K dn, K flag, K mech, K cb)
 {
     CHECK_PARAM_INT_TYPE(sess,"bind");
     CHECK_PARAM_STRING_TYPE(dn,"bind");
@@ -408,7 +432,10 @@ K kdbldap_interactive_bind_s(K sess, K dn, K flag, K mech)
     CHECK_SESSION(session);
     char* dnStr = createString(dn);
     char* mechStr = createString(mech);
+    if(cb->t==-KS&&strlen(cb->s)){ksaslcb=cb;ksaslr=ktn(0,0);};
     int res = ldap_sasl_interactive_bind_s(session,dnStr,mechStr,sctrlsp,NULL,iflag,lutil_sasl_interact,NULL);
+    if(ksaslr)r0(ksaslr);
+    if(ksaslcb)ksaslcb=0;
     free(dnStr);
     free(mechStr);
     return ki(res);
