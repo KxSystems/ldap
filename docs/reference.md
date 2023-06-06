@@ -202,7 +202,7 @@ name | type | content | default
 `dn` | string or symbol | user to authenticate | Anonymous simple authentication. (Typical for SASL authentication as most SASL mechanisms identify the target account within the encoded credentials.)
 `flag` | int | Can be .ldap.LDAP_SASL_AUTOMATIC, .ldap.LDAP_SASL_INTERACTIVE, .ldap.LDAP_SASL_QUIET
 `mech` | string or symbol | SASL mechanism for authentication | `LDAP_SASL_SIMPLE`<br><br>Query the attribute `supportedSASLMechanisms` from the  server’s `rootDSE` for the list of SASL mechanisms the server supports. Query the option LDAP_OPT_X_SASL_MECHLIST to see what mechanisms are installed on the client machine.
-`cb` | symbol | Symbol denoting a function in your q session with 4 arguments, used to process SASL sasl_interact_t data 1. id (int) 2. challenge (string) 3. prompt (string) 4. default result (string). Should return a mixed list (1st element an int for ldap [result code](#result-codes), 2nd element a char/byte vector used to populate the sasl_interact result field). Please view [Sasl Authentication section here](https://linux.die.net/man/3/ldap_sasl_bind_s) | Empty symbol (uses default callbacks with default values).
+`cb` | symbol | Symbol denoting a function in your q session with 4 arguments, used to process SASL sasl_interact_t data 1. id (long) 2. challenge (string) 3. prompt (string) 4. default result (string). Should return a mixed list (1st element an int for ldap [result code](#result-codes), 2nd element a char/byte vector used to populate the sasl_interact result field). Please view [Sasl Authentication section here](https://linux.die.net/man/3/ldap_sasl_bind_s) | Empty symbol (uses default callbacks with default values).
 
 Returns an ldap [result code](#result-codes)
 

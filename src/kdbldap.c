@@ -383,7 +383,7 @@ static int interaction(unsigned flags,sasl_interact_t *interact){
    if(ksaslcb){
        K x,y,z;int r;
        x=k(0,ksaslcb->s,
-               ki(interact->id),
+               kj(interact->id),
                kp(interact->challenge?(S)interact->challenge:(S)""),
                kp(interact->prompt?(S)interact->prompt:(S)""),
                kp(interact->defresult?(S)interact->defresult:(S)""),

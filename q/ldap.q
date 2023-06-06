@@ -8,7 +8,7 @@ setGlobalOption:`kdbldap 2:(`kdbldap_set_global_option;2)
 getOption:`kdbldap 2:(`kdbldap_get_option;2)
 getGlobalOption:`kdbldap 2:(`kdbldap_get_global_option;1)
 bind_s:`kdbldap 2:(`kdbldap_bind_s;4)
-interactive_bind_s:`kdbldap 2:(`kdbldap_interactive_bind_s;4)
+interactive_bind_s:`kdbldap 2:(`kdbldap_interactive_bind_s;5)
 search_s:`kdbldap 2:(`kdbldap_search_s;8)
 unbind_s:`kdbldap 2:(`kdbldap_unbind_s;1)
 err2string:`kdbldap 2:(`kdbldap_err2string;1)
@@ -42,8 +42,8 @@ bind:{[sess;customDict]
   }
 
 interactiveBind:{[sess;customDict]
-  defaultKeys:`dn`flag`mech;
-  defaultVals:(`;LDAP_SASL_AUTOMATIC;`);
+  defaultKeys:`dn`flag`mech`cb;
+  defaultVals:(`;LDAP_SASL_AUTOMATIC;`;`);
   defaultDict:defaultKeys!defaultVals;
   if[customDict~(::);customDict:()!()];
   if[99h<>type customDict;'"customDict must be (::) or a dictionary"];
