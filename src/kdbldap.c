@@ -394,7 +394,7 @@ static int interaction(unsigned flags,sasl_interact_t *interact){
            interact->len = 0;
            return LDAP_UNAVAILABLE;
        }
-       jk(&ksaslr,z);
+       jk(&ksaslr,r1(z));
        interact->result = z->G0;
        interact->len = z->n;
        r=y->i;
@@ -434,7 +434,7 @@ K kdbldap_interactive_bind_s(K sess, K dn, K flag, K mech, K cb)
     char* mechStr = createString(mech);
     if(cb->t==-KS&&strlen(cb->s)){ksaslcb=cb;ksaslr=ktn(0,0);};
     int res = ldap_sasl_interactive_bind_s(session,dnStr,mechStr,sctrlsp,NULL,iflag,lutil_sasl_interact,NULL);
-    if(ksaslr)r0(ksaslr);
+    if(ksaslr){r0(ksaslr);ksaslr=0;}
     if(ksaslcb)ksaslcb=0;
     free(dnStr);
     free(mechStr);
