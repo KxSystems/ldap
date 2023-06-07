@@ -102,7 +102,14 @@ static K setIntOption(LDAP* ld, int option, K value)
     CHECK_PARAM_INT_TYPE(value,"set_option");
     int val = getInt(value);
     return ki(ldap_set_option(ld, option, &val));
-} 
+}
+
+static K setIntOnOffOption(LDAP* ld, int option, K value)
+{
+    CHECK_PARAM_INT_TYPE(value,"set_option");
+    int val = getInt(value);
+    return ki(ldap_set_option(ld, option, val==0?LDAP_OPT_OFF:LDAP_OPT_ON));
+}
 
 static K setBerLenOption(LDAP* ld, int option, K value)
 {
@@ -126,28 +133,21 @@ static K set_option(LDAP* ld, K option,K value)
     CHECK_PARAM_TYPE(option,-KS,"set_option");
     
     /* LDAP SUPPORTED OPTIONS */
-    SET_OPTION(Int,LDAP_OPT_CONNECT_ASYNC,value);
+    SET_OPTION(IntOnOff,LDAP_OPT_CONNECT_ASYNC,value);
     SET_OPTION(Int,LDAP_OPT_DEBUG_LEVEL,value);
     SET_OPTION(Int,LDAP_OPT_DEREF,value);
     SET_OPTION(String,LDAP_OPT_DIAGNOSTIC_MESSAGE,value);
     SET_OPTION(String,LDAP_OPT_MATCHED_DN,value);
     SET_OPTION(Timeval,LDAP_OPT_NETWORK_TIMEOUT,value);
     SET_OPTION(Int,LDAP_OPT_PROTOCOL_VERSION,value)
-    if (strcmp(option->s,"LDAP_OPT_REFERRALS")==0)
-    {
-        CHECK_PARAM_INT_TYPE(value,"set_option");
-        int val = getInt(value);
-        if (val==0)
-            return ki(ldap_set_option(ld, LDAP_OPT_REFERRALS, LDAP_OPT_OFF));
-        return ki(ldap_set_option(ld, LDAP_OPT_REFERRALS, LDAP_OPT_ON));
-    }
+    SET_OPTION(IntOnOff,LDAP_OPT_REFERRALS,value)
     SET_OPTION(Int,LDAP_OPT_RESULT_CODE,value);
     SET_OPTION(Int,LDAP_OPT_SIZELIMIT,value);
     SET_OPTION(Int,LDAP_OPT_TIMELIMIT,value);
     SET_OPTION(Timeval,LDAP_OPT_TIMEOUT,value);
     /* SASL SUPPORTED OPTIONS */
     SET_OPTION(BerLen,LDAP_OPT_X_SASL_MAXBUFSIZE,value);
-    SET_OPTION(Int,LDAP_OPT_X_SASL_NOCANON,value);
+    SET_OPTION(IntOnOff,LDAP_OPT_X_SASL_NOCANON,value);
     SET_OPTION(String,LDAP_OPT_X_SASL_SECPROPS,value);
     SET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_EXTERNAL,value);
     SET_OPTION(BerLen,LDAP_OPT_X_SASL_SSF_MAX,value);
