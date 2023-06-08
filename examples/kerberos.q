@@ -23,15 +23,24 @@ $[0i~sessionInit;
   ]
 
 .ldap.setOption[mainSession;`LDAP_OPT_X_SASL_SSF_MAX;0];
+-1"### Set Protocol version to 3";
 .ldap.setOption[mainSession;`LDAP_OPT_PROTOCOL_VERSION;3];
+-1"### Set NOCANON off to canonicalize ldap host (get unique name of ldap host via DNS)";
+.ldap.setOption[0i;`LDAP_OPT_X_SASL_NOCANON;.ldap.LDAP_OPT_OFF];
 
 -1"### Bind to LDAP server using GSSAPI";
-bindSession:.ldap.interactiveBind[mainSession;(`mech`flag)!("GSSAPI";.ldap.LDAP_SASL_AUTOMATIC)];
-$[0i~bindSession;
+bindResult:.ldap.interactiveBind[mainSession;(`mech`flag)!("GSSAPI";.ldap.LDAP_SASL_AUTOMATIC)];
+$[0i~bindResult;
   [-1"'Request to bind to sessions server successfully processed'";];
   [-2"Request to bind to server failed with return: '",
-   .ldap.err2string[bindSession],"'. Exiting.\n";
+   .ldap.err2string[bindResult],
+   "'.\nAdditional info: '",
+   .ldap.getOption[mainSession;`LDAP_OPT_DIAGNOSTIC_MESSAGE],
+   "'. Exiting.\n";
    exit 1]
   ]
+
+-1"### Unbind";
+.ldap.unbind[mainSession]
 
 -1"### DONE";
