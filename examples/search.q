@@ -33,16 +33,19 @@ show .ldap.getOption[globalSession;`LDAP_OPT_API_INFO]
 
 
 -1"\n\n### Bind to sessions server";
-bindSession:.ldap.bind[globalSession;::]
-$[0i~bindSession`ReturnCode;
+bindResult:.ldap.bind[globalSession;::]
+$[0i~bindResult`ReturnCode;
   [-1"'Request to bind to sessions server successfully processed'";];
   [-2"Request to bind to server failed with return: '",
-   .ldap.err2string[bindSession`ReturnCode],"'. Exiting.\n";
+   .ldap.err2string[bindResult`ReturnCode],
+   "'.\nAdditional info: '",
+   .ldap.getOption[globalSession;`LDAP_OPT_DIAGNOSTIC_MESSAGE],
+   "'. Exiting.\n";
    exit 1]
   ]
 
 -1"\n### Bind to session results";
-show bindSession
+show bindResult
 
 
 -1"\n\n### Search at base level";

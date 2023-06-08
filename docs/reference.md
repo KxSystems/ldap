@@ -381,7 +381,7 @@ LDAP_OPT_CONNECT_ASYNC        integer
 LDAP_OPT_DEBUG_LEVEL          integer
 LDAP_OPT_DEREF                integer        
 LDAP_OPT_DESC                 integer        file descriptor associated to the socket buffer of ldap
-LDAP_OPT_DIAGNOSTIC_MESSAGE   string         error string associated to the handle
+LDAP_OPT_DIAGNOSTIC_MESSAGE   string         error string associated to the handle (useful for bind errors)
 LDAP_OPT_MATCHED_DN           string         the matched DN
 LDAP_OPT_NETWORK_TIMEOUT      integer        timeout in microseconds
 LDAP_OPT_PROTOCOL_VERSION     integer        ldap protocol version
@@ -401,7 +401,7 @@ LDAP_OPT_X_SASL_AUTHZID      string          SASL authorization identity
 LDAP_OPT_X_SASL_MAXBUFSIZE   long            SASL maximum buffer size 
 LDAP_OPT_X_SASL_MECH         string          the SASL mechanism
 LDAP_OPT_X_SASL_MECHLIST     stringlist      list of the available mechanisms
-LDAP_OPT_X_SASL_NOCANON      integer         NOCANON flag (unset,the hostname is canonicalized)
+LDAP_OPT_X_SASL_NOCANON      integer         Unset,the hostname is canonicalized (useful when DNS load balancers/etc in use).
 LDAP_OPT_X_SASL_REALM        string          SASL realm
 LDAP_OPT_X_SASL_SSF          long            SASL SSF
 LDAP_OPT_X_SASL_SSF_MAX      long            SASL maximum SSF
@@ -447,18 +447,18 @@ The options are listed by protocol.
 ### `LDAP`
 
 ```txt
-LDAP_OPT_CONNECT_ASYNC       integer/long
+LDAP_OPT_CONNECT_ASYNC       integer/long    set using value .ldap.LDAP_OPT_ON or .ldap.LDAP_OPT_OFF. When set, the library will call connect(2) and return, without waiting for response. This leaves the handle in a connecting state. Subsequent calls to library routines will poll for completion of the connect before performing further operations
 LDAP_OPT_DEBUG_LEVEL         integer/long
 LDAP_OPT_DEREF               integer/long    when alias dereferencing must occur
                                              one of: .ldap.LDAP_DEREF_NEVER
                                                      .ldap.LDAP_DEREF_SEARCHING
                                                      .ldap.LDAP_DEREF_FINDING
                                                      .ldap.LDAP_DEREF_ALWAYS
-LDAP_OPT_DIAGNOSTIC_MESSAGE  string/symbol
+LDAP_OPT_DIAGNOSTIC_MESSAGE  string/symbol   error string associated to the LDAP handle
 LDAP_OPT_NETWORK_TIMEOUT     integer/long    number of microseconds for timeout
 LDAP_OPT_MATCHED_DN          string/symbol   the matched DN
 LDAP_OPT_PROTOCOL_VERSION    integer/long    ldap protocol version
-LDAP_OPT_REFERRALS           integer/long    .ldap.LDAP_OPT_ON or .ldap.LDAP_OPT_OFF
+LDAP_OPT_REFERRALS           integer/long    set using value .ldap.LDAP_OPT_ON or .ldap.LDAP_OPT_OFF
 LDAP_OPT_RESULT_CODE         integer/long    implicitly chase referrals or not
 LDAP_OPT_SIZELIMIT           integer/long    maximum number of entries to be returned by a search
 LDAP_OPT_TIMELIMIT           integer/long    time limit after which a search operation should be terminated by the server
@@ -470,7 +470,7 @@ LDAP_OPT_TIMEOUT             integer/long    number of microseconds for timeout
 
 ```txt
 LDAP_OPT_X_SASL_MAXBUFSIZE    long           SASL maximum buffer size
-LDAP_OPT_X_SASL_NOCANON       integer/long   NOCANON flag (unset,the hostname is canonicalized)
+LDAP_OPT_X_SASL_NOCANON       integer/long   unset,the hostname is canonicalized (useful when DNS load balancers/etc in use). Set using value .ldap.LDAP_OPT_OFF or .ldap.LDAP_OPT_ON
 LDAP_OPT_X_SASL_SECPROPS      string/symbol  comma-separated list of properties
 LDAP_OPT_X_SASL_SSF_EXTERNAL  long           SASL SSF value related to an authentication performed using an EXTERNAL mechanism
 LDAP_OPT_X_SASL_SSF_MAX       long           SASL maximum SSF
