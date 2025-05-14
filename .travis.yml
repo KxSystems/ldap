@@ -4,8 +4,6 @@ jobs:
     os: linux
   - dist: bionic
     os: linux
-  - os: osx
-    osx_image: xcode12.5  
   - os: windows
 language: c
 compiler: gcc
