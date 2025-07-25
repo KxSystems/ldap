@@ -381,7 +381,7 @@ K ksaslr=0;
 
 static int interaction(unsigned flags,sasl_interact_t *interact){
    if(ksaslcb){
-       K x,y,z;
+       K x,y,z;int r;
        x=k(0,ksaslcb->s,
                kj(interact->id),
                kp(interact->challenge?(S)interact->challenge:(S)""),
@@ -392,7 +392,7 @@ static int interaction(unsigned flags,sasl_interact_t *interact){
            printf("bind cb error: %s\n",xt==-128?xs:"type");
            interact->result = 0;
            interact->len = 0;
-           return LDAP_UNAVAILABLE;
+           return LDAP_PARAM_ERROR;
        }
        jk(&ksaslr,r1(z));
        interact->result = malloc((z->n)+1); // Allocate memory for the result
@@ -401,11 +401,12 @@ static int interaction(unsigned flags,sasl_interact_t *interact){
            ((char *)interact->result)[z->n] = '\0';        // Null-terminate the string
            } else {
            printf("Memory allocation failed for interact->result\n");
+           return LDAP_NO_MEMORY;
            }
        interact->len = z->n;
-    // r=y->i; // may not need to extract the first value of pairs of cb's return
+       r=y->i; // extract the first value of pairs of cb's return
        r0(x);
-       return LDAP_SUCCESS;
+       return r;
    }
    interact->result = interact->defresult?interact->defresult:"";
    interact->len = strlen(interact->result);
