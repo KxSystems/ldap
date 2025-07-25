@@ -30,6 +30,10 @@ LDAP_SASL_AUTOMATIC:0i
 LDAP_SASL_INTERACTIVE:1i
 LDAP_SASL_QUIET:2i
 
+SASL_CB_USER:16385j
+SASL_CB_AUTHNAME:16386j
+SASL_CB_PASS:16388j
+
 bind:{[sess;customDict]
   defaultKeys:`dn`cred`mech;
   defaultVals:```;
