@@ -381,7 +381,7 @@ K ksaslr=0;
 
 static int interaction(unsigned flags,sasl_interact_t *interact){
    if(ksaslcb){
-       K x,y,z;int r;
+       K x,y,z;
        x=k(0,ksaslcb->s,
                kj(interact->id),
                kp(interact->challenge?(S)interact->challenge:(S)""),
@@ -395,11 +395,17 @@ static int interaction(unsigned flags,sasl_interact_t *interact){
            return LDAP_UNAVAILABLE;
        }
        jk(&ksaslr,r1(z));
-       interact->result = z->G0;
+       interact->result = malloc((z->n)+1); // Allocate memory for the result
+       if (interact->result) {
+           strncpy((char *)interact->result, (char *) z->G0, z->n); // Copy only the first n characters, as z->G0 sometimes may provide extra characters
+           ((char *)interact->result)[z->n] = '\0';        // Null-terminate the string
+           } else {
+           printf("Memory allocation failed for interact->result\n");
+           }
        interact->len = z->n;
-       r=y->i;
+    // r=y->i; // may not need to extract the first value of pairs of cb's return
        r0(x);
-       return r;
+       return LDAP_SUCCESS;
    }
    interact->result = interact->defresult?interact->defresult:"";
    interact->len = strlen(interact->result);

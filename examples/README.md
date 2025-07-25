@@ -48,3 +48,23 @@ When running, the value of the ldap option `LDAP_OPT_X_SASL_MECHLIST` returned, 
 ```bash
 q kerberos.q -host ldap.edt.org
 ```
+
+### digestMD5.q
+
+Shows an example of binding to an ldap server that uses DIGEST-MD5 authentication. Not all ldap servers avail of this feature. Contact your LDAP server admin for details.
+
+Requires OpenLdap to have been built with Cryus SASL. Prior to running, the Cyrus SASL plugin which supports DIGEST-MD5 authentication (e.g. on Ubuntu, these are the `sasl2-bin` and `libsasl2-modules` packages) should be installed.
+
+When running, the value of the ldap option LDAP_OPT_X_SASL_MECHLIST returned, should include `DIGEST-MD5` (if the correct SASL packages have been installed). Without this, the bind will fail.
+
+Prior to binding, the callback function `cb` should be defined:-
+
+```q
+ksaslcb:{[id; challenge; prompt; def]   
+ :$[id~.ldap.SASL_CB_USER;(0i; "peter");
+    id~.ldap.SASL_CB_AUTHNAME;(0i; "peter");
+    id~.ldap.SASL_CB_PASS;(0i; "myPassword");
+    (1i; "")];
+ };
+bindResult:.ldap.interactiveBind[globalSession;(`mech`flag`cb)!("DIGEST-MD5";.ldap.LDAP_SASL_QUIET;`ksaslcb)];
+```
