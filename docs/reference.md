@@ -563,13 +563,9 @@ Check with your LDAP server admin what is supported for your system.
 
 > Tip: Often found in the root attribute `supportedSASLMechanisms`
 
-Most of these checks are performed externally, in separate code related to your security mechanism.
+Most of these checks are performed externally. A range of 3rd party libraries are available to handle various security mechanisms.
 
 For example, `DIGEST_MD5` is initially performed by calling `bind` with no credentials, `mech` set to `"DIGEST-MD5"`, and capturing the returned credential values from the server. Using the returned credentials to MD5-encode the user details, a second `bind` call is then made with the MD5-encoded details as the `cred` parameter. 
-(Requires an additional MD5 library that is outside the scope of this interface.)
+(Requires an additional MD5 library that is outside the scope of this interface.) See [examples README.md](../examples/README.md#digestmd5q) for details. 
 
-Examples:
-
--   [zheolong/melody-lib](https://github.com/zheolong/melody-lib/blob/master/libldap5/sources/ldap/common/digest_md5.c) (MD5)
--   [hajuuk/R7000](https://github.com/hajuuk/R7000/blob/master/ap/gpl/samba-3.0.13/source/libads/sasl.c) ([GSSAPI](https://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface))
--   [illumos/illumos-gate](https://github.com/illumos/illumos-gate/blob/master/usr/src/lib/libldap5/sources/ldap/common/cram_md5.c) ([CRAM-MD5](https://en.wikipedia.org/wiki/CRAM-MD5))
+A [kerberos](../examples/README.md#kerberosq) example is also provided.
