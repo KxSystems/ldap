@@ -1,0 +1,88 @@
+name: linux-openldap-build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: rockylinux:8
+
+    env:
+      OPENLDAP_VERSION: 2.6.13
+      OPENLDAP_PREFIX: ${{ github.workspace }}/.cache/openldap/2.6.3
+      BUILD_DIR: ${{ github.workspace }}/cbuild
+      OUTPUT_FILE: kdbldap-linux.tgz
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install build tools
+        run: |
+          yum -y install \
+            gcc \
+            make \
+            cmake \
+            wget \
+            tar \
+            gzip \
+            openssl-devel \
+            groff-base \
+            findutils \
+            which
+
+      - name: Restore OpenLDAP cache
+        id: cache-openldap
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.OPENLDAP_PREFIX }}
+          key: openldap-centos7-${{ env.OPENLDAP_VERSION }}
+
+      - name: Build and install OpenLDAP
+        if: steps.cache-openldap.outputs.cache-hit != 'true'
+        run: |
+          rm -rf "$BUILD_DIR"
+          mkdir -p "$BUILD_DIR" "$OPENLDAP_PREFIX"
+
+          wget -q "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${OPENLDAP_VERSION}.tgz"
+          tar xvf "openldap-${OPENLDAP_VERSION}.tgz" -C "$BUILD_DIR" --strip-components=1
+
+          cd "$BUILD_DIR"
+          ./configure \
+            --prefix="$OPENLDAP_PREFIX" \
+            --disable-slapd \
+            --with-tls=openssl
+          make -j"$(getconf _NPROCESSORS_ONLN || echo 2)"
+          make install
+
+      - name: Build 
+        run: |
+          mkdir cmake && 
+          cd cmake && 
+          BUILD_HOME="$OPENLDAP_PREFIX" cmake .. -DCMAKE_BUILD_TYPE=Release && 
+          make install && 
+          cd .. &&
+          tar  -zcvf "$OUTPUT_FILE" -C cmake/kdbldap .
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: kdbldap-linux
+          path: ${{ env.OUTPUT_FILE }}
+          retention-days: 1
+
+  release:
+    needs: build
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release-assets.yml

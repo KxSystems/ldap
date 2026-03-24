@@ -1,0 +1,147 @@
+name: windows-openldap-build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      OUTPUT_FILE: kdbldap-windows.zip
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up MSVC developer command prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Set up MSYS2 (for OpenLDAP binaries only)
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-openldap
+          cache: true
+
+      - name: Restore cached OpenLDAP prep
+        id: cache-openldap
+        uses: actions/cache@v5
+        with:
+          path: |
+            cbuild/include
+            cbuild/lib
+            cbuild/bin
+          key: ${{ runner.os }}-openldap-msvc-x64-${{ hashFiles('.github/workflows/build_win.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-openldap-msvc-x64-
+
+      - name: Prepare OpenLDAP headers, DLLs, and MSVC import libs
+        if: steps.cache-openldap.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $msysRoot = Join-Path "${{ steps.msys2.outputs.msys2-location }}" "mingw64"
+          $cbuild   = Join-Path $env:GITHUB_WORKSPACE "cbuild"
+          $incDir   = Join-Path $cbuild "include"
+          $libDir   = Join-Path $cbuild "lib"
+          $binDir   = Join-Path $cbuild "bin"
+
+          New-Item -ItemType Directory -Force -Path $incDir | Out-Null
+          New-Item -ItemType Directory -Force -Path $libDir | Out-Null
+          New-Item -ItemType Directory -Force -Path $binDir | Out-Null
+
+          Copy-Item -Recurse -Force "$msysRoot\include\*" $incDir
+          Copy-Item -Force "$msysRoot\bin\libldap*.dll" $binDir
+          Copy-Item -Force "$msysRoot\bin\liblber*.dll" $binDir
+
+          $ldapDll = Get-ChildItem $binDir -Filter "libldap*.dll" | Select-Object -First 1
+          $lberDll = Get-ChildItem $binDir -Filter "liblber*.dll" | Select-Object -First 1
+
+          if (-not $ldapDll) { throw "Could not find libldap DLL" }
+          if (-not $lberDll) { throw "Could not find liblber DLL" }
+
+          $dumpbin = Get-Command dumpbin.exe -ErrorAction Stop
+          $libexe  = Get-Command lib.exe -ErrorAction Stop
+
+          function New-ImportLibFromDll {
+            param(
+              [string]$DllPath,
+              [string]$LibName
+            )
+
+            $base       = [System.IO.Path]::GetFileNameWithoutExtension($DllPath)
+            $defPath    = Join-Path $env:RUNNER_TEMP "$base.def"
+            $exportsTxt = Join-Path $env:RUNNER_TEMP "$base-exports.txt"
+            $outLib     = Join-Path $libDir $LibName
+
+            & $dumpbin.Path /exports $DllPath | Out-File -Encoding ascii $exportsTxt
+
+            $lines = Get-Content $exportsTxt
+            $exportLines = @()
+            foreach ($line in $lines) {
+              if ($line -match '^\s+\d+\s+[0-9A-F]+\s+[0-9A-F]+\s+(\S+)$') {
+                $name = $Matches[1]
+                if ($name -notmatch '^@' -and $name -ne '[NONAME]') {
+                  $exportLines += $name
+                }
+              }
+            }
+
+            if (-not $exportLines) {
+              throw "No exports parsed from $DllPath"
+            }
+
+            @(
+              "LIBRARY $([System.IO.Path]::GetFileName($DllPath))"
+              "EXPORTS"
+            ) + $exportLines | Set-Content -Encoding ascii $defPath
+
+            & $libexe.Path /def:$defPath /machine:x64 /out:$outLib
+            if ($LASTEXITCODE -ne 0) {
+              throw "lib.exe failed creating $outLib"
+            }
+          }
+
+          New-ImportLibFromDll -DllPath $ldapDll.FullName -LibName "libldap.lib"
+          New-ImportLibFromDll -DllPath $lberDll.FullName -LibName "liblber.lib"
+
+      - name: Build with CMake
+        shell: pwsh
+        env:
+          BUILD_HOME: ${{ github.workspace }}/cbuild
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          Set-Location build
+          cmake .. -G "Visual Studio 17 2022" -A x64
+          cmake --build . --config Release --verbose
+          cmake --install . --config Release
+          cd ..
+          7z a -tzip -r "${{ env.OUTPUT_FILE }}" build\kdbldap\*
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: kdbldap-windows
+          path: ${{ env.OUTPUT_FILE }}
+          retention-days: 1
+
+  release:
+    needs: build
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release-assets.yml

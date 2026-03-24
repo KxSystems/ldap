@@ -1,0 +1,48 @@
+name: mac-openldap-build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    env:
+      OPENLDAP_PREFIX: /usr/local/opt/openldap/
+      OUTPUT_FILE: kdbldap-osx.tgz
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install build tools
+        run: brew install openldap
+           
+      - name: Build 
+        run: |
+          mkdir cmake && 
+          cd cmake && 
+          BUILD_HOME="$OPENLDAP_PREFIX" cmake .. -DCMAKE_BUILD_TYPE=Release && 
+          make install && 
+          cd .. &&
+          tar  -zcvf "$OUTPUT_FILE" -C cmake/kdbldap .
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: kdbldap-osx
+          path: ${{ env.OUTPUT_FILE }}
+          retention-days: 1
+
+  release:
+    needs: build
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release-assets.yml
