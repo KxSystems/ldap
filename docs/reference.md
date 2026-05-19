@@ -174,6 +174,15 @@ q).ldap.err2string[-9i]
 "Bad parameter to an ldap routine"
 ```
 
+### IPv6
+
+The underlying OpenLDAP supports IPv6. When using IPv6 addresses directly, surround the IP with square brackets. For example
+
+```q
+q).ldap.init[0i;enlist `$"ldap://[2001:db8::1]:389"]
+```
+
+When using a hostname, it can resolve to an IPv4 or IPv6 address depending on what the underlying system supports and what the host resolves to.
 
 ## `.ldap.interactiveBind`
 
